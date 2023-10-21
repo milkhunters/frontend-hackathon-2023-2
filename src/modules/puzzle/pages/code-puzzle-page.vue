@@ -14,11 +14,12 @@ const puzzle = ref(null);
 watch(
   () => route.params.testId,
   async () => {
-    const { succeed, content } = await api.puzzle.getTestById(
+    const { succeed, content } = await api.puzzle.getCodePuzzleById(
       route.params.testId
     );
     if (succeed) puzzle.value = content;
-  }
+  },
+  { immediate: true }
 );
 
 const view = shallowRef();
@@ -33,7 +34,7 @@ const router = useRouter();
 const error = ref(null);
 
 const submitCodePuzzle = async () => {
-  const { succeed, content } = await api.puzzle.submitCodeTest({
+  const { succeed, content } = await api.puzzle.submitCodePuzzle({
     id: puzzle.value.id,
     code: code.value,
   });
@@ -44,10 +45,14 @@ const submitCodePuzzle = async () => {
 const clearError = () => {
   error.value = null;
 };
+
+watch(code, clearError);
 </script>
 
 <template>
-  <default-layout>
+  <default-layout v-if="puzzle">
+    <div>{{ puzzle.description }}</div>
+
     <codemirror
       v-model="code"
       placeholder="Code goes here..."

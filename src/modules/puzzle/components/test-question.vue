@@ -30,7 +30,6 @@ defineEmits(['selected']);
           id="color-1"
           name="color"
           @change="$emit('selected', id, answer.id)"
-          :value="answer.value"
         />
         <label for="color-1">{{ answer.text }}</label>
       </div>

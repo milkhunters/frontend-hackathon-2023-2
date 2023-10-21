@@ -1,19 +1,42 @@
 export default {
   getTestPuzzleById(id) {
-    console.log(`Puzzle for id: ${id}.`);
+    console.log(`Test for id: ${id}.`);
     return {
       succeed: true,
       content: {
         id: 1,
         title: 'x',
-        questions: [{ id: 1, text: 'y', value: 123 }],
+        questions: [
+          {
+            id: 1,
+            title: 't',
+            text: 'y',
+            answers: [
+              {
+                id: 1,
+                text: 'a',
+              },
+            ],
+          },
+        ],
       },
     };
   },
 
   submitTestPuzzle({ id, answers }) {
-    console.log(`Submitted test with id ${id}`, answers)
+    console.log(`Submitted test with id ${id}`, answers);
     return { succeed: true };
+  },
+
+  getCodePuzzleById(id) {
+    console.log(`Code for id: ${id}.`);
+    return {
+      succeed: true,
+      content: {
+        id: 1,
+        description: 'bla',
+      },
+    };
   },
 
   submitCodePuzzle({ id, code }) {

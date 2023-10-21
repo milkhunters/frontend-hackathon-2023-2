@@ -11,11 +11,13 @@ const puzzle = ref(null);
 const answers = ref(null);
 
 const selectAnswer = (questionId, answerId) => {
-  answers[questionId].answerId = answerId;
+  answers.value[questionId].answerId = answerId;
 };
 
 const canEndTest = computed(() => {
-  return answers && answers.every(({ answerId }) => answerId);
+  return (
+    answers.value != null && answers.value.every(({ answerId }) => answerId)
+  );
 });
 
 watch(
@@ -23,7 +25,7 @@ watch(
   async () => {
     if (route.params.testId == null) return;
 
-    const { succeed, content } = await api.puzzle.getTestById(
+    const { succeed, content } = await api.puzzle.getTestPuzzleById(
       route.params.testId
     );
 
@@ -31,7 +33,8 @@ watch(
 
     puzzle.value = content;
     answers.value = puzzle.value.questions.map((_) => ({ answerId: null }));
-  }
+  },
+  { immediate: true }
 );
 
 const submitTestModalOpened = ref(false);
@@ -57,45 +60,41 @@ const endTest = async () => {
 </script>
 
 <template>
-  <default-layout>
-    <template v-if="puzzle">
-      <h1 class="exam_title">puzzle.title</h1>
-      <div class="exam_quest_wrapper">
-        <test-question
-          v-for="(question, index) in puzzle.questions"
-          :key="question.id"
-          :id="index"
-          :title="question.title"
-          :answers="question.answers"
-          @selected="selectAnswer"
-        />
+  <default-layout v-if="puzzle">
+    <h1 class="exam_title">{{ puzzle.title }}</h1>
+    <div class="exam_quest_wrapper">
+      <test-question
+        v-for="(question, index) in puzzle.questions"
+        :key="question.id"
+        :id="index"
+        :title="question.title"
+        :answers="question.answers"
+        @selected="selectAnswer"
+      />
 
-        <button
-          class="openModalBtn exam_send_btn"
-          :disabled="!canEndTest"
-          @click="openModal"
-        >
-          Отправить результаты
-        </button>
-      </div>
+      <button
+        class="openModalBtn exam_send_btn"
+        :disabled="!canEndTest"
+        @click="openModal"
+      >
+        Отправить результаты
+      </button>
+    </div>
 
-      <Teleport to="body">
-        <div id="myModal" class="modal" v-if="submitTestModalOpened">
-          <div class="modal-content">
-            <p class="modal_title">
-              Вы уверены, что хотите отправить результаты?
-            </p>
-            <div class="modal_buttons">
-              <button class="modal_btn_close" @click="closeModal">
-                Отмена
-              </button>
-              <button class="modal_btn_confirm" @click="endTest">
-                Отправить
-              </button>
-            </div>
+    <Teleport to="body">
+      <div id="myModal" class="modal" v-if="submitTestModalOpened">
+        <div class="modal-content">
+          <p class="modal_title">
+            Вы уверены, что хотите отправить результаты?
+          </p>
+          <div class="modal_buttons">
+            <button class="modal_btn_close" @click="closeModal">Отмена</button>
+            <button class="modal_btn_confirm" @click="endTest">
+              Отправить
+            </button>
           </div>
         </div>
-      </Teleport>
-    </template>
+      </div>
+    </Teleport>
   </default-layout>
 </template>
