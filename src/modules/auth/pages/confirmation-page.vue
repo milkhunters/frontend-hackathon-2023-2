@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import { useConfirmationEmailStore } from '@/modules/auth/stores/confirmation-email';
 import { API_INJECTION_KEY } from '@/keys';
 import { useLanguage } from '@/composables/use-language';
+import Spinner from '@/components/spinner.vue';
 
 const REQUEST_TIMEOUT = 120000;
 
@@ -16,7 +17,7 @@ const canSendMail = computed(() => registrationStore.email && !sendTimeout.value
 
 const sendMail = () => {
 	if (!canSendMail.value) return;
-	api.auth.sendConfirmationMail({ email: registrationStore.email.value });
+	api.auth.sendConfirmationMail({ email: registrationStore.email });
 	sendTimeout.value = setTimeout(() => (sendTimeout.value = null), REQUEST_TIMEOUT);
 };
 
@@ -32,8 +33,11 @@ const lang = useLanguage();
 
 const sendCode = async () => {
   if (!canSendCode) return;
-	const { succeed } = await api.auth.confirmEmail({ email: registrationStore.email.value, code: code.value });
-	if (succeed) await router.push({ name: 'login' });
+	const { succeed } = await api.auth.confirmEmail({ email: registrationStore.email, code: code.value });
+	if (succeed) {
+    registrationStore.email = null;
+    await router.push({ name: 'login' });
+  }
 	else errors.value = lang.confirm.error;
 };
 </script>

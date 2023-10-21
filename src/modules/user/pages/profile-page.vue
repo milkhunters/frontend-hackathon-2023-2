@@ -1,39 +1,73 @@
 <script setup>
 import DefaultLayout from '@/layouts/default-layout.vue';
 import { useCurrentUserStore } from '@/stores/current-user';
+import { ref } from 'vue';
 
 const { user } = useCurrentUserStore();
+const role = user?.role?.title;
 </script>
 
 <template>
   <default-layout>
-    <div :class="styles.profile">
-      <div class="card">
-        <div class="card-content">
-          <div :class="[styles.media, 'media']">
-            <div class="media-left">
-              <figure class="image is-56x56">
-                <img
-                  :class="[styles.avatar, 'img is-rounded']"
-                  src="https://leonardo.osnova.io/1232c2f0-0bcd-5561-9a17-b8a1d0edaef4/-/scale_crop/72x72/-/format/webp"
-                  alt="Placeholder image"
-                />
-              </figure>
-            </div>
-            <div class="media-content">
-              <p class="title is-4">{{ user?.username }}</p>
-              <p class="subtitle is-6">@{{ user?.username }}</p>
-            </div>
-            <div v-if="currentUser?.id === user?.id">
-              <button :class="[styles.settings, 'button']">Настройки</button>
-            </div>
+    <div>
+      <main class="main">
+        <div class="admin_wrapper">
+          <div class="search_wrapper">
+            <input type="search" id="search" placeholder="Поиск..." />
           </div>
-          <div class="content">
-            <p :class="styles.about">Сингулярность ближе...</p>
-            <time :class="styles.reg_date">
-              <i :class="[styles.calendar, 'fi fi-rr-calendar']"></i>
-              Регистрация: давно
-            </time>
+          <div class="table_wrapper">
+            <table class="admin_table">
+              <tr>
+                <td>Тузов Роман Александрович</td>
+                <td>HR</td>
+                <td>
+                  <button
+                    class="openModalBtn admin_settings"
+                    data-modal="myModal"
+                  >
+                    &#9881;
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Иван Ваня Иванов</td>
+                <td>Чел</td>
+                <td>
+                  <button
+                    class="openModalBtn admin_settings"
+                    data-modal="myModal1"
+                  >
+                    &#9881;
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </main>
+
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <p class="modal_title">Выберите роль</p>
+          <select name="roles" id="role-select">
+            <option value="">--Выберите роль--</option>
+            <option value="dog">HR</option>
+            <option value="cat">Администратор</option>
+          </select>
+          <div class="modal_buttons">
+            <button class="modal_btn_close">Отмена</button>
+            <button class="modal_btn_confirm">Сохранить</button>
+          </div>
+        </div>
+      </div>
+      <div id="myModal1" class="modal">
+        <div class="modal-content">
+          <p class="modal_title">
+            Вы уверены, что хотите отправить результаты? 2
+          </p>
+          <div class="modal_buttons">
+            <button class="modal_btn_close">Отмена</button>
+            <button class="modal_btn_confirm">Отправить</button>
           </div>
         </div>
       </div>
@@ -41,54 +75,123 @@ const { user } = useCurrentUserStore();
   </default-layout>
 </template>
 
-<style module="styles" scoped lang="scss">
-// Profile
-.profile {
-  margin-top: 10px;
+<style scoped lang="css">
+/*
+    МОДАЛЬНОЕ ОКНО
+*/
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0; /* Начальная прозрачность для плавного появления */
+  transition: opacity 0.3s; /* Добавляем плавную анимацию появления */
 }
-
-// Avatar
-.avatar {
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  max-width: 450px;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
 }
-
-// About
-.about {
-  color: black;
-  font-weight: 500;
+.modal_title {
   font-size: 18px;
 }
-
-// Settings
-.media {
-  display: flex;
-  justify-content: space-between;
+.modal_buttons {
+  margin-top: 50px;
+  align-self: flex-end;
+}
+.modal_btn_confirm {
+  padding: 8px 16px;
+  font-size: 15px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  background: #0b76ef;
+  transition: 0.2s ease;
+}
+.modal_btn_confirm:hover {
+  background: #0857b4;
+}
+.modal_btn_close {
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  margin-right: 12px;
+  padding: 4px 6px;
+  background: none;
 }
 
-.settings {
-  font-weight: 600;
-}
+/*
 
-/* RegDate */
-.reg_date {
-  display: flex;
-  justify-content: left;
-}
+    ADMIN PANEL
 
-.calendar {
-  display: flex;
-  justify-content: left;
-  margin-right: 5px;
+*/
+.admin_wrapper {
+  max-width: 80%;
+  width: 100%;
+  margin: 10px auto;
 }
-
-/* Mobile Begin */
-@media (max-width: 915px) {
-  .about {
-    font-size: 16px;
-  }
-  .settings {
-    width: 100px;
-    font-weight: 500;
-    font-size: 19px;
-  }
+/* search */
+.search_wrapper {
+  display: block;
+}
+#search {
+  width: 100%;
+  height: 40px;
+  background: #fff;
+  border: 1px solid #d2d2d2;
+  font-size: 14px;
+  color: #000;
+  padding: 0 0 0 20px;
+  border-radius: 8px;
+  -webkit-transition: 0.2s ease;
+  -moz-transition: 0.2s ease;
+  -ms-transition: 0.2s ease;
+  -o-transition: 0.2s ease;
+  transition: 0.2s ease;
+}
+.table_wrapper {
+  border: 1px solid #d2d2d2;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+.admin_table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin_table td {
+  padding: 15px;
+  border: 1px solid #d2d2d2;
+  white-space: nowrap;
+}
+.admin_table td:last-child {
+  padding: 0;
+}
+.admin_settings {
+  display: block;
+  vertical-align: middle;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 18px;
+}
+#role-select {
+  margin-top: 15px;
 }
 </style>

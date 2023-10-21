@@ -11,36 +11,38 @@ const router = useRouter();
 const api = inject(API_INJECTION_KEY);
 const lang = useLanguage();
 
-const username = ref('');
-const password = ref('');
+const email = ref('ivanov@milkhunters.ru');
+const password = ref('Qwerty123');
 const error = ref(null);
 
 const signInMutation = useMutation(api.auth.signIn);
 
 const trySignIn = async () => {
   const { succeed } = await signInMutation.mutate({
-    username: username.value,
+    email: email.value,
     password: password.value,
   });
-  if (succeed) router.push({ name: 'home' });
+  if (succeed) await router.push({ name: 'home' });
   else error.value = lang.login.error;
 };
 
 const clearError = () => (error.value = null);
+
+console.log('login');
 </script>
 
 <template>
   <auth-layout title="Войдите в свой аккаунт">
     <form @submit.prevent="trySignIn">
       <p :class="styles.error_message" v-if="error">{{ error }}</p>
-      <label for="login">Имя пользователя</label>
+      <label for="login">Адрес электронной почты</label>
       <input
         :class="styles.login"
-        id="login"
+        id="email"
         type="text"
         @input="clearError"
-        v-model="username"
-        placeholder="Введите имя пользователя"
+        v-model="email"
+        placeholder="Введите адрес электронной почты"
       />
 
       <label for="login">Пароль</label>

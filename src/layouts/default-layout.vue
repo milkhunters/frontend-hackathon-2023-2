@@ -33,8 +33,7 @@ const tryLogout = async () => {
 			<div :class="styles.header_container">
 				<div :class="styles.header_layout">
 					<div :class="styles.header_logo">
-						<img src="@/../public/logo.png" alt="logo" />
-						<span :class="styles.title">MilkHunters</span>
+						<span :class="styles.title">CareerCrafter</span>
 					</div>
 					<div :class="styles.header_menu">
 						<div class="image is-48x48">
@@ -56,7 +55,7 @@ const tryLogout = async () => {
 										<a href="#" class="dropdown-item"> Настройки </a>
 										<hr class="dropdown-divider" />
 										<a @click.stop="tryLogout" class="dropdown-item">
-											<Spinner v-if="logoutMutation.isLoading" />
+											<Spinner v-if="logoutMutation.isLoading.value" />
 											<template v-else>Выйти</template>
 										</a>
 									</div>
@@ -81,7 +80,7 @@ const tryLogout = async () => {
 							</div>
 						</router-link>
 						<router-link
-							to="/profile/123"
+							to="/profile"
 							v-slot="{ isActive }"
 						>
 							<div :class="[styles.item, { [styles.active]: isActive }]">
@@ -111,7 +110,7 @@ const tryLogout = async () => {
 				</div>
 			</router-link>
 			<router-link
-				to="/profile/123"
+				to="/profile"
 				v-slot="{ isActive }"
 			>
 				<div :class="[styles.mobile_item, { [styles.mobile_active]: isActive }]">

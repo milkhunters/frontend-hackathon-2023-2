@@ -10,6 +10,7 @@ const register = { permissions: [{ name: 'CREATE_USER', redirect: 'login' }] };
 const confirm = {
   permissions: [{ name: 'VERIFY_EMAIL', redirect: 'register' }],
 };
+
 const home = { state: { name: 'ACTIVE', redirect: 'login' } };
 const profile = { state: { name: 'ACTIVE', redirect: 'login' } };
 
@@ -30,7 +31,7 @@ const routes = [
   { name: 'home', path: '/', component: HomePage, meta: home },
   {
     name: 'profile',
-    path: '/profile/:id',
+    path: '/profile',
     component: ProfilePage,
     meta: profile,
   },
@@ -53,10 +54,9 @@ export default (getPermissions, state) => {
     }
 
     const hasRequiredState =
-      routeMeta.state == null ||
-      routeMeta.state.name === STATES[state.value];
+      routeMeta.state == null || routeMeta.state.name === STATES[state.value];
 
-    if (!hasRequiredState) return { name: routeMeta.state.redirect };
+    // if (!hasRequiredState) return { name: routeMeta.state.redirect };
   });
 
   return router;

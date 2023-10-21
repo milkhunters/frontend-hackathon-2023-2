@@ -9,17 +9,19 @@ import { useConfirmationEmailStore } from '@/modules/auth/stores/confirmation-em
 import { API_INJECTION_KEY } from '@/keys';
 
 const user = reactive({
-  username: 'sadad',
-  email: '@milkhunters.ru',
+  email: 'asdas@milkhunters.ru',
   password: 'Qwerty123',
   passwordConfirmation: 'Qwerty123',
+  first_name: 'asfdas',
+  last_name: 'asdasd',
 });
 
 const errors = reactive({
-  username: null,
   email: null,
   password: null,
-  passwordMatch: null,
+  passwordConfirmation: null,
+  first_name: null,
+  last_name: null,
 });
 
 const hasErrors = computed(() => {
@@ -34,6 +36,8 @@ const canRegister = computed(() => {
   return !hasErrors && !hasEmpty;
 });
 
+const clearError = (field) => (errors[field] = null);
+
 const api = inject(API_INJECTION_KEY);
 const lang = useLanguage();
 
@@ -42,24 +46,36 @@ const validateError = (failed, error, message = error) => {
 };
 
 const validateForm = () => {
-  validateError(
-    !api.validation.isLoginValid(user.username) && user.username !== '',
-    'username',
-    'login'
-  );
+  const fieldValidations = [
+    {
+      field: user.first_name,
+      key: 'first_name',
+      validation: api.validation.isNameValid,
+    },
+    {
+      field: user.last_name,
+      key: 'last_name',
+      validation: api.validation.isNameValid,
+    },
+    {
+      field: user.email,
+      key: 'email',
+      validation: api.validation.isEmailValid,
+    },
+    {
+      field: user.password,
+      key: 'password',
+      validation: api.validation.isPasswordValid,
+    },
+  ];
+
+  for (const { field, key, validation } of fieldValidations) {
+    validateError(!validation(field), key);
+  }
 
   validateError(
-    !api.validation.isEmailValid(user.email) && user.email !== '',
-    'email'
-  );
-
-  validateError(
-    !api.validation.isPasswordValid(user.password) && user.password !== '',
-    'password'
-  );
-
-  validateError(
-    user.password !== user.passwordConfirmation && user.password !== '',
+    user.password !== user.passwordConfirmation,
+    'passwordConfirmation',
     'passwordMatch'
   );
 };
@@ -73,13 +89,15 @@ const trySignUp = async () => {
   if (canRegister.value) return;
 
   const { succeed, content } = await signUpMutation.mutate({
-    username: user.username,
+    first_name: user.first_name,
+    last_name: user.last_name,
     email: user.email,
+    bio: '',
     password: user.password,
   });
 
   if (succeed) {
-    registration.email.value = content;
+    registrationStore.email = user.email;
     return await router.push({ name: 'confirm' });
   }
 
@@ -96,18 +114,31 @@ const trySignUp = async () => {
 
 <template>
   <auth-layout :title="lang.registration.title">
-    <form @submit.prevent="trySignUp">
-      <label for="login">Имя пользователя</label>
+    <form :class="styles.form" @submit.prevent="trySignUp">
+      <label for="first-name">Имя</label>
       <input
-        :class="errors.username ? styles.error_field : styles.username"
-        id="login"
+        :class="errors.first_name ? styles.error_field : styles.first_name"
+        id="first-name"
         type="text"
-        @input="validateForm"
-        v-model="user.username"
-        placeholder="Введите имя пользователя"
+        @input="clearError('first_name')"
+        v-model="user.first_name"
+        placeholder="Введите имя"
       />
-      <span v-if="errors.username" :class="styles.error_message">{{
-        errors.username
+      <span v-if="errors.first_name" :class="styles.error_message">{{
+        errors.first_name
+      }}</span>
+
+      <label for="last-name">Фамилия</label>
+      <input
+        :class="errors.last_name ? styles.error_field : styles.last_name"
+        id="last-name"
+        type="text"
+        @input="clearError('last_name')"
+        v-model="user.last_name"
+        placeholder="Введите фамилию"
+      />
+      <span v-if="errors.last_name" :class="styles.error_message">{{
+        errors.last_name
       }}</span>
 
       <label for="email">Адрес электронной почты</label>
@@ -115,7 +146,7 @@ const trySignUp = async () => {
         :class="errors.email ? styles.error_field : styles.email"
         id="email"
         type="email"
-        @input="validateForm"
+        @input="clearError('email')"
         v-model="user.email"
         placeholder="Введите адрес электронной почты"
       />
@@ -128,7 +159,7 @@ const trySignUp = async () => {
         :class="errors.password ? styles.error_field : styles.password"
         id="password"
         type="password"
-        @input="validateForm"
+        @input="clearError('password')"
         v-model="user.password"
         placeholder="Введите пароль"
       />
@@ -139,16 +170,18 @@ const trySignUp = async () => {
       <label for="password-confirm">Повторите пароль</label>
       <input
         :class="
-          errors.passwordMatch ? styles.error_field : styles.password_confirm
+          errors.passwordConfirmation
+            ? styles.error_field
+            : styles.password_confirm
         "
         id="password-confirm"
         type="password"
-        @input="validateForm"
+        @input="clearError('passwordConfirmation')"
         v-model="user.passwordConfirmation"
         placeholder="Повторите пароль"
       />
-      <span v-if="errors.passwordMatch" :class="styles.error_message">{{
-        errors.passwordMatch
+      <span v-if="errors.passwordConfirmation" :class="styles.error_message">{{
+        errors.passwordConfirmation
       }}</span>
 
       <button
@@ -183,7 +216,8 @@ label {
   text-align: left;
 }
 
-.username,
+.first_name,
+.last_name,
 .email,
 .password,
 .password_confirm {
@@ -199,7 +233,8 @@ label {
   width: 100%;
 }
 
-.username:hover,
+.first_name:hover,
+.last_name:hover,
 .email:hover,
 .password:hover,
 .password_confirm:hover {

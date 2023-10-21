@@ -11,7 +11,7 @@ defineProps({
 	<div :class="styles.wrapper">
 		<div :class="styles.inner">
 			<header :class="styles.header">
-				<span :class="styles.title">MilkHunters ID</span>
+				<span :class="styles.title">CareerCrafter ID</span>
 				<span :class="styles.suptitle">{{ title }}</span>
 			</header>
 			<slot></slot>

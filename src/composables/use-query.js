@@ -6,7 +6,7 @@ export const useQuery = (query) => {
   const response = ref(null);
 
 	const fetchData = async () => {
-    response.value = await mutate();
+        response.value = await mutate();
 	};
 
   onMounted(fetchData);
