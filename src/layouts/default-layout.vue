@@ -44,7 +44,7 @@ const tryLogout = async () => {
                   <img
                     @click.stop="toggleDropdown"
                     class="is-rounded"
-                    src="https://leonardo.osnova.io/1232c2f0-0bcd-5561-9a17-b8a1d0edaef4/-/scale_crop/72x72/-/format/webp"
+                    src="https://publicdomainvectors.org/tn_img/abstract-user-flat-4.webp"
                     alt="UserLogoHere"
                   />
                 </div>
@@ -87,13 +87,6 @@ const tryLogout = async () => {
           <slot></slot>
         </div>
         <footer :class="styles.footer">
-          <div :class="styles.footer_inner">
-            Условия предоставления услуг Политика конфиденциальности Политика в
-            отношении файлов Cookie Специальные возможности Информация о рекламе
-            Eщe
-            <br />
-            © 2023 MilkHunters Hackathon.
-          </div>
         </footer>
       </div>
     </div>
