@@ -27,7 +27,6 @@
 }
 .main {
     max-width: calc(100% - 260px);
-    margin-left: 260px;
     height: 100%;
 }
 

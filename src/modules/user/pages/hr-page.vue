@@ -3,6 +3,7 @@ import {ref} from "vue";
 
 const showModalView = ref(false);
 const showModalEdit = ref(false);
+const showModalAdd = ref(false);
 
 </script>
 
@@ -11,7 +12,7 @@ const showModalEdit = ref(false);
     <div class="hr_wrapper">
       <div class="search_wrapper">
         <input type="search" id="search" placeholder="Поиск..." />
-        <button class="openModalBtn hr_add_button" data-modal="hr_add_modal">+</button>
+        <button @click="showModalAdd" class="openModalBtn hr_add_button" data-modal="hr_add_modal">+</button>
       </div>
       <div class="hr_vacancy_wrapper">
 
