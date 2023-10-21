@@ -12,7 +12,7 @@ const lang = useLanguage();
 const currentUserStore = useCurrentUserStore();
 
 const email = ref('ivanov@milkhunters.ru');
-const password = ref('Qwerty123');
+const password = ref('qwerty123');
 const error = ref(null);
 
 const signInMutation = useMutation(currentUserStore.signIn);

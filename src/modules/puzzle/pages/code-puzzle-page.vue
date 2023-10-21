@@ -65,6 +65,25 @@ watch(code, clearError);
 
     <div v-if="error">{{ error }}</div>
 
-    <button :disabled="error" @click="submitCodePuzzle">Send</button>
+    <button class="send_button" :disabled="error" @click="submitCodePuzzle">
+      Send
+    </button>
   </default-layout>
 </template>
+
+<style lang="css">
+.send_button {
+  width: 10%;
+  border: 0;
+  border-radius: 6px;
+  height: 40px;
+  max-height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #252d3e;
+  color: rgb(255, 255, 255);
+  margin-top: 24px;
+  user-select: none;
+}
+</style>
