@@ -37,20 +37,9 @@ watch(
   { immediate: true }
 );
 
-const submitTestModalOpened = ref(false);
-
-const openModal = () => {
-  submitTestModalOpened.value = true;
-};
-
-const closeModal = () => {
-  submitTestModalOpened.value = false;
-};
-
 const router = useRouter();
 
 const endTest = async () => {
-  if (!canEndTest.value) return;
   const { succeed } = await api.puzzle.submitTestPuzzle({
     id: puzzle.value.id,
     answers: answers.value,
@@ -75,26 +64,10 @@ const endTest = async () => {
       <button
         class="openModalBtn exam_send_btn"
         :disabled="!canEndTest"
-        @click="openModal"
+        @click="endTest"
       >
         Отправить результаты
       </button>
     </div>
-
-    <Teleport to="body">
-      <div id="myModal" class="modal" v-if="submitTestModalOpened">
-        <div class="modal-content">
-          <p class="modal_title">
-            Вы уверены, что хотите отправить результаты?
-          </p>
-          <div class="modal_buttons">
-            <button class="modal_btn_close" @click="closeModal">Отмена</button>
-            <button class="modal_btn_confirm" @click="endTest">
-              Отправить
-            </button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
   </default-layout>
 </template>

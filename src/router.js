@@ -16,7 +16,6 @@ const confirm = {
   permissions: [{ name: 'VERIFY_EMAIL', redirect: 'register' }],
 };
 
-const home = { state: { name: 'ACTIVE', redirect: 'login' } };
 const profile = { state: { name: 'ACTIVE', redirect: 'login' } };
 
 const testPuzzle = {};
@@ -36,7 +35,7 @@ const routes = [
     component: ConfirmationPage,
     meta: confirm,
   },
-  { name: 'home', path: '/', component: HomePage, meta: home },
+  { name: 'home', path: '/', component: HomePage, meta: {} },
   {
     name: 'profile',
     path: '/profile',
