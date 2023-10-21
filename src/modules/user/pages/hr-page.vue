@@ -7,14 +7,6 @@ const api = inject(API_INJECTION_KEY);
 const pagination = reactive({ page: 1, count: 100 });
 const vacancies = ref(null);
 
-onMounted(async () => {
-  const { succeed, content } = await api.vacancy.getAllVacancies(
-    pagination.page,
-    pagination.count
-  );
-  if (succeed) vacancies.value = content;
-});
-
 const showModalView = ref(false);
 const showModalAdd = ref(false);
 
@@ -22,6 +14,7 @@ const newVacancy = reactive({
   title: '',
   content: '',
   state: 0,
+  type: null,
   testTime: '',
 });
 
@@ -45,8 +38,11 @@ const tryCreateVacancy = async () => {
   }
 };
 
-const tryDeleteVacancy = async (id) => {
-  const {succeed, content} = await api.vacancy.deleteVacancyById(id);
+const tryUpdateVacancy = async (id) => {
+  const { succeed, content } = await api.vacancy.updateVacancyById(id, {
+    state: 1,
+    ...currentVacancy,
+  });
   if (succeed) {
     const { succeed, content } = await api.vacancy.getAllVacancies(
       pagination.page,
@@ -55,7 +51,27 @@ const tryDeleteVacancy = async (id) => {
     if (succeed) vacancies.value = content;
     showModalView.value = false;
   }
-}
+};
+
+const tryDeleteVacancy = async (id) => {
+  const { succeed, content } = await api.vacancy.deleteVacancyById(id);
+  if (succeed) {
+    const { succeed, content } = await api.vacancy.getAllVacancies(
+      pagination.page,
+      pagination.count
+    );
+    if (succeed) vacancies.value = content;
+    showModalView.value = false;
+  }
+};
+
+onMounted(async () => {
+  const { succeed, content } = await api.vacancy.getAllVacancies(
+    pagination.page,
+    pagination.count
+  );
+  if (succeed) vacancies.value = content;
+});
 </script>
 
 <template>
@@ -78,6 +94,9 @@ const tryDeleteVacancy = async (id) => {
             <div class="hr_vacancy_item_content">
               <p class="hr_vacancy_item_name">{{ vacancy.title }}</p>
             </div>
+            <p>
+              {{ !vacancy.state ? 'Активна' : 'Снята с публикации' }}
+            </p>
             <p class="hr_vacancy_item_date">
               {{ new Date(vacancy.createdAt).toLocaleDateString() }}
             </p>
@@ -111,6 +130,13 @@ const tryDeleteVacancy = async (id) => {
         type="text"
       />
 
+      <label for="hr_type">Тип</label>
+      <select v-model="newVacancy.type" name="hr_type" id="hr_type">
+        <option value="">--Выберите тип--</option>
+        <option value="1">Стажер</option>
+        <option value="0">Практикант</option>
+      </select>
+
       <label for="desc_hr">Время на прохождение теста</label>
       <input
         v-model="newVacancy.testTime"
@@ -137,7 +163,8 @@ const tryDeleteVacancy = async (id) => {
         <p class="modal_title">{{ currentVacancy.title }}</p>
       </div>
       <p class="hr_view_modal_text">
-        <span class="hr_view_modal_text_left">Тип: </span>Cтажер
+        <span class="hr_view_modal_text_left">Тип: </span
+        >{{ currentVacancy.type ? 'Стажировка' : 'Практика' }}
       </p>
       <p class="hr_view_modal_text">
         <span class="hr_view_modal_text_left">Описание: </span
@@ -162,7 +189,16 @@ const tryDeleteVacancy = async (id) => {
         <button @click="showModalView = false" class="modal_btn_close">
           Закрыть
         </button>
-        <button @click='tryDeleteVacancy(currentVacancy.id)' class="modal_btn_confirm modal_btn_red">
+<!--        <button-->
+<!--          @click="tryDeleteVacancy(currentVacancy.id)"-->
+<!--          class="modal_btn_confirm modal_btn_red"-->
+<!--        >-->
+<!--          Удалить-->
+<!--        </button>-->
+        <button
+          @click="tryUpdateVacancy(currentVacancy.id)"
+          class="modal_btn_confirm modal_btn_red"
+        >
           Снять с публикации
         </button>
       </div>
