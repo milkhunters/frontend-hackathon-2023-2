@@ -1,6 +1,6 @@
 import { toCamelCase, toSnakeCase } from '@/lib/api/http/common/format';
 
-const REFRESH_TOKENS_URL = `${import.meta.env.VITE_API_URL}/auth/refresh_tokens`;
+const REFRESH_TOKENS_URL = `${import.meta.env.VITE_API_URL}/ums/auth/refresh_tokens`;
 
 const toApiRequest = (data) => {
 	const request = toSnakeCase(data);

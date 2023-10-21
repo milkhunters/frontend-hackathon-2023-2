@@ -5,7 +5,7 @@ import { computed, inject, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguage } from '@/composables/use-language';
 import { useMutation } from '@/composables/use-mutation';
-import { useConfirmationEmailStore } from '@/modules/auth/stores/confirmation-email';
+import { useConfirmationStore } from '@/modules/auth/stores/confirmation';
 import { API_INJECTION_KEY } from '@/keys';
 
 const user = reactive({
@@ -38,12 +38,13 @@ const canRegister = computed(() => {
 
 const clearError = (field) => (errors[field] = null);
 
-const api = inject(API_INJECTION_KEY);
 const lang = useLanguage();
 
 const validateError = (failed, error, message = error) => {
   errors[error] = failed ? lang.registration.error[message] : null;
 };
+
+const api = inject(API_INJECTION_KEY);
 
 const validateForm = () => {
   const fieldValidations = [
@@ -81,7 +82,7 @@ const validateForm = () => {
 };
 
 const router = useRouter();
-const registrationStore = useConfirmationEmailStore();
+const confirmationStore = useConfirmationStore();
 const signUpMutation = useMutation(api.auth.signUp);
 
 const trySignUp = async () => {
@@ -97,7 +98,8 @@ const trySignUp = async () => {
   });
 
   if (succeed) {
-    registrationStore.email = user.email;
+    confirmationStore.email = user.email;
+    confirmationStore.password = user.password;
     return await router.push({ name: 'confirm' });
   }
 
