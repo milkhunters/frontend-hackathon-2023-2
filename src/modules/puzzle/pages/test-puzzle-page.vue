@@ -7,11 +7,12 @@ import { API_INJECTION_KEY } from '@/keys';
 
 const api = inject(API_INJECTION_KEY);
 const route = useRoute();
-const puzzle = ref(null);
+
+const puzzles = ref(null);
 const answers = ref(null);
 
 const selectAnswer = (questionId, answerId) => {
-  answers.value[questionId].answerId = answerId;
+  answers.value[questionId].answerOptionId = answerId;
 };
 
 const canEndTest = computed(() => {
@@ -25,14 +26,17 @@ watch(
   async () => {
     if (route.params.testId == null) return;
 
-    const { succeed, content } = await api.puzzle.getTestPuzzleById(
+    const { succeed, content } = await api.testing.startTheoTest(
       route.params.testId
     );
 
     if (!succeed) return;
 
-    puzzle.value = content;
-    answers.value = puzzle.value.questions.map((_) => ({ answerId: null }));
+    puzzles.value = content;
+    answers.value = puzzles.value.map((_) => ({
+      questionId: route.params.id,
+      answerOptionId: null,
+    }));
   },
   { immediate: true }
 );
@@ -40,8 +44,8 @@ watch(
 const router = useRouter();
 
 const endTest = async () => {
-  const { succeed } = await api.puzzle.submitTestPuzzle({
-    id: puzzle.value.id,
+  const { succeed } = await api.testing.endTheoTest({
+    id: route.params.testId,
     answers: answers.value,
   });
   if (succeed) await router.push({ name: 'profile' });
@@ -49,15 +53,14 @@ const endTest = async () => {
 </script>
 
 <template>
-  <default-layout v-if="puzzle">
-    <h1 class="exam_title">{{ puzzle.title }}</h1>
+  <default-layout v-if="puzzles">
     <div class="exam_quest_wrapper">
       <test-question
-        v-for="(question, index) in puzzle.questions"
+        v-for="(question, index) in puzzles"
         :key="question.id"
         :id="index"
-        :title="question.title"
-        :answers="question.answers"
+        :title="question.content"
+        :answers="question.answerOptions"
         @selected="selectAnswer"
       />
 

@@ -31,7 +31,7 @@ defineEmits(['selected']);
           name="color"
           @change="$emit('selected', id, answer.id)"
         />
-        <label for="color-1">{{ answer.text }}</label>
+        <label for="color-1">{{ answer.content }}</label>
       </div>
     </div>
   </div>

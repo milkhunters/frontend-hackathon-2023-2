@@ -14,7 +14,7 @@ const puzzle = ref(null);
 watch(
   () => route.params.testId,
   async () => {
-    const { succeed, content } = await api.puzzle.getCodePuzzleById(
+    const { succeed, content } = await api.testing.startPracTest(
       route.params.testId
     );
     if (succeed) puzzle.value = content;
@@ -34,7 +34,7 @@ const router = useRouter();
 const error = ref(null);
 
 const submitCodePuzzle = async () => {
-  const { succeed, content } = await api.puzzle.submitCodePuzzle({
+  const { succeed, content } = await api.testing.endPracTest({
     id: puzzle.value.id,
     code: code.value,
   });

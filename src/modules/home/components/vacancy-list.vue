@@ -2,11 +2,11 @@
 import { computed, inject, onMounted, reactive, ref } from 'vue';
 import { API_INJECTION_KEY } from '@/keys';
 
-defineEmits(['selected']);
+defineEmits(['selected', 'started-test']);
 
 const api = inject(API_INJECTION_KEY);
 
-const pagination = reactive({ page: 1, count: 10 });
+const pagination = reactive({ page: 1, count: 5 });
 const vacancies = ref(null);
 
 onMounted(async () => {
@@ -33,10 +33,21 @@ const prevPage = () => {
     <div class="search_wrapper">
       <input type="search" id="search" placeholder="Поиск..." />
       <button class="openModalBtn hr_add_button" @click="nextPage">+</button>
-      <button class="openModalBtn hr_add_button" :disabled="!canGoBack" @click="prevPage">-</button>
+      <button
+        class="openModalBtn hr_add_button"
+        :disabled="!canGoBack"
+        @click="prevPage"
+      >
+        -
+      </button>
     </div>
     <div class="hr_vacancy_wrapper">
-      <div class="hr_vacancy" v-for="vacancy in vacancies" :key="vacancy.id">
+      <div
+        class="hr_vacancy"
+        v-for="vacancy in vacancies"
+        :key="vacancy.id"
+        @click="$emit('selected', vacancy.id)"
+      >
         <div class="hr_vacancy_item">
           <div class="hr_vacancy_item_content">
             <p class="hr_vacancy_item_name">{{ vacancy.title }}</p>
@@ -46,11 +57,11 @@ const prevPage = () => {
           </p>
         </div>
         <button
-          @click="$emit('selected', vacancy.id)"
+          @click.stop="$emit('started-test', vacancy.id)"
           class="openModalBtn hr_view_button"
           data-modal="hr_view_modal"
         >
-          Откликнуться
+          ->
         </button>
       </div>
     </div>
