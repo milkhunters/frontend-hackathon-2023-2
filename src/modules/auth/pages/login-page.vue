@@ -1,34 +1,33 @@
 <script setup>
 import AuthLayout from '@/modules/auth/layouts/auth-layout.vue';
 import Spinner from '@/components/spinner.vue';
-import { inject, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguage } from '@/composables/use-language';
-import { API_INJECTION_KEY } from '@/keys';
 import { useMutation } from '@/composables/use-mutation';
+import { useCurrentUserStore } from '@/stores/current-user';
 
 const router = useRouter();
-const api = inject(API_INJECTION_KEY);
 const lang = useLanguage();
+const currentUserStore = useCurrentUserStore();
 
 const email = ref('ivanov@milkhunters.ru');
 const password = ref('Qwerty123');
 const error = ref(null);
 
-const signInMutation = useMutation(api.auth.signIn);
+const signInMutation = useMutation(currentUserStore.signIn);
 
 const trySignIn = async () => {
   const { succeed } = await signInMutation.mutate({
     email: email.value,
     password: password.value,
   });
+
   if (succeed) await router.push({ name: 'home' });
   else error.value = lang.login.error;
 };
 
 const clearError = () => (error.value = null);
-
-console.log('login');
 </script>
 
 <template>

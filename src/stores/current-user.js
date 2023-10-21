@@ -4,22 +4,31 @@ import { API_INJECTION_KEY } from '@/keys';
 
 export const useCurrentUserStore = defineStore('current-user', () => {
   const api = inject(API_INJECTION_KEY);
+  const user = ref(null);
 
-  const currentUser = ref(null);
-  const guestPermissions = ref([]);
+  const permissions = computed(() => {
+    return user.value?.role?.permissions ?? [];
+  });
+
+  const state = computed(() => {
+    return user.value?.state ?? 0;
+  });
 
   const fetch = async () => {
-    const [userResult, guestResult] = await Promise.all([
-      api.user.getCurrentUser(),
-      api.role.getGuestPermissions(),
-    ]);
-    if (userResult.succeed) currentUser.value = userResult.content;
-    if (guestResult.succeed) guestPermissions.value = guestResult.content;
+    const { succeed, content } = await api.user.getCurrentUser();
+    if (succeed) user.value = content;
   };
 
-  const getPermissions = () =>
-    currentUser.value?.role?.permissions ?? guestPermissions.value ?? [];
-  const getState = () => currentUser.value?.state ?? 0;
+  const signIn = async (data) => {
+    const result = await api.auth.signIn(data);
+    if (result.succeed) user.value = result.content;
+    return result;
+  };
 
-  return { user: currentUser, getPermissions, getState, fetch };
+  const signOut = async () => {
+    user.value = null;
+    return await api.auth.signOut();
+  };
+
+  return { user, permissions, state, fetch, signIn, signOut };
 });

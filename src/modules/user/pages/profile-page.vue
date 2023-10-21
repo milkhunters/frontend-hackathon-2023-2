@@ -1,10 +1,9 @@
 <script setup>
 import DefaultLayout from '@/layouts/default-layout.vue';
 import { useCurrentUserStore } from '@/stores/current-user';
-import { ref } from 'vue';
 
-const { user } = useCurrentUserStore();
-const role = user?.role?.title;
+const currentUserStore = useCurrentUserStore();
+const role = currentUserStore.user?.role?.title;
 </script>
 
 <template>

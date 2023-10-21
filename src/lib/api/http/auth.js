@@ -27,7 +27,7 @@ export default {
 		return await makeApiRequest(AUTH_SIGN_IN_API_URL, 'POST', { data, sendCookies: true });
 	},
 
-	async logout() {
+	async signOut() {
 		return await makeApiRequest(AUTH_LOGOUT_API, 'POST', { sendCookies: true });
 	},
 
