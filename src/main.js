@@ -12,11 +12,11 @@ const main = async () => {
     .provide(API_INJECTION_KEY, api)
     .use(createPinia());
 
-  const { permissions, state, fetch } = useCurrentUserStore();
+  const { getPermissions, getState, fetch } = useCurrentUserStore();
   await fetch();
 
   app
-    .use(createRouter(permissions, state))
+    .use(createRouter(getPermissions, getState))
     .mount('#app');
 };
 

@@ -17,8 +17,9 @@ export const useCurrentUserStore = defineStore('current-user', () => {
     if (guestResult.succeed) guestPermissions.value = guestResult.content;
   };
 
-  const permissions = () =>  currentUser.value?.role?.permissions ?? guestPermissions.value ?? [];
-  const state = computed(() => currentUser.value?.state ?? 0);
+  const getPermissions = () =>
+    currentUser.value?.role?.permissions ?? guestPermissions.value ?? [];
+  const getState = () => currentUser.value?.state ?? 0;
 
-  return { user: currentUser, permissions, state, fetch };
+  return { user: currentUser, getPermissions, getState, fetch };
 });
