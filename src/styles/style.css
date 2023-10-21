@@ -405,6 +405,8 @@
 .hr_vacancy_wrapper {
     align-items: center;
     margin-top: 30px;
+    height: 100%;
+    overflow-y: auto;
 }
 .hr_vacancy {
     display: flex;
