@@ -15,11 +15,11 @@ const role = currentUserStore.user?.role?.title;
     <div v-if="role === 'Admin'">
       <admin-page></admin-page>
     </div>
-    <div v-else-if="role === 'User'">
+    <div v-else-if="role === 'Hr'">
       <hr-page></hr-page>
     </div>
     <div v-else-if="role === 'User'">
-      <user-page></user-page>
+      <user-page :user="currentUserStore.user"></user-page>
     </div>
   </default-layout>
 </template>
