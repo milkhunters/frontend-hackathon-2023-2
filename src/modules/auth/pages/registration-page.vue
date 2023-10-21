@@ -12,16 +12,16 @@ const user = reactive({
   email: 'asdas@milkhunters.ru',
   password: 'Qwerty123',
   passwordConfirmation: 'Qwerty123',
-  first_name: 'asfdas',
-  last_name: 'asdasd',
+  firstName: 'asfdas',
+  lastName: 'asdasd',
 });
 
 const errors = reactive({
   email: null,
   password: null,
   passwordConfirmation: null,
-  first_name: null,
-  last_name: null,
+  firstName: null,
+  lastName: null,
 });
 
 const hasErrors = computed(() => {
@@ -48,13 +48,13 @@ const validateError = (failed, error, message = error) => {
 const validateForm = () => {
   const fieldValidations = [
     {
-      field: user.first_name,
-      key: 'first_name',
+      field: user.firstName,
+      key: 'firstName',
       validation: api.validation.isNameValid,
     },
     {
-      field: user.last_name,
-      key: 'last_name',
+      field: user.lastName,
+      key: 'lastName',
       validation: api.validation.isNameValid,
     },
     {
@@ -89,8 +89,8 @@ const trySignUp = async () => {
   if (canRegister.value) return;
 
   const { succeed, content } = await signUpMutation.mutate({
-    first_name: user.first_name,
-    last_name: user.last_name,
+    first_name: user.firstName,
+    last_name: user.lastName,
     email: user.email,
     bio: '',
     password: user.password,
@@ -117,28 +117,28 @@ const trySignUp = async () => {
     <form :class="styles.form" @submit.prevent="trySignUp">
       <label for="first-name">Имя</label>
       <input
-        :class="errors.first_name ? styles.error_field : styles.first_name"
+        :class="errors.firstName ? styles.error_field : styles.first_name"
         id="first-name"
         type="text"
-        @input="clearError('first_name')"
-        v-model="user.first_name"
+        @input="clearError('firstName')"
+        v-model="user.firstName"
         placeholder="Введите имя"
       />
-      <span v-if="errors.first_name" :class="styles.error_message">{{
-        errors.first_name
+      <span v-if="errors.firstName" :class="styles.error_message">{{
+        errors.firstName
       }}</span>
 
       <label for="last-name">Фамилия</label>
       <input
-        :class="errors.last_name ? styles.error_field : styles.last_name"
+        :class="errors.lastName ? styles.error_field : styles.last_name"
         id="last-name"
         type="text"
-        @input="clearError('last_name')"
-        v-model="user.last_name"
+        @input="clearError('lastName')"
+        v-model="user.lastName"
         placeholder="Введите фамилию"
       />
-      <span v-if="errors.last_name" :class="styles.error_message">{{
-        errors.last_name
+      <span v-if="errors.lastName" :class="styles.error_message">{{
+        errors.lastName
       }}</span>
 
       <label for="email">Адрес электронной почты</label>

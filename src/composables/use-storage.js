@@ -1,8 +1,8 @@
 import { ref, watch } from 'vue';
 
-export const useStorage = (key, storage = localStorage) => {
+export const useStorage = (key, defaultValue = null, storage = localStorage) => {
   const cachedValue = storage.getItem(key);
-  const defaultValue = cachedValue ? JSON.parse(cachedValue) : null;
+  const value = cachedValue ? JSON.parse(cachedValue) : defaultValue;
 
   const storedValue = ref(defaultValue);
 

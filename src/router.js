@@ -3,6 +3,8 @@ import RegistrationPage from '@/modules/auth/pages/registration-page.vue';
 import ConfirmationPage from '@/modules/auth/pages/confirmation-page.vue';
 import HomePage from '@/modules/home/pages/home-page.vue';
 import ProfilePage from '@/modules/user/pages/profile-page.vue';
+import TestPuzzleComponent from '@/modules/puzzle/pages/test-puzzle-page.vue';
+import CodePuzzleComponent from '@/modules/puzzle/pages/code-puzzle-page.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const login = { permissions: [{ name: 'AUTHENTICATE', redirect: 'home' }] };
@@ -13,6 +15,9 @@ const confirm = {
 
 const home = { state: { name: 'ACTIVE', redirect: 'login' } };
 const profile = { state: { name: 'ACTIVE', redirect: 'login' } };
+
+const testPuzzle = {};
+const codePuzzle = {};
 
 const routes = [
   { name: 'login', path: '/login', component: LoginPage, meta: login },
@@ -35,11 +40,23 @@ const routes = [
     component: ProfilePage,
     meta: profile,
   },
+  {
+    name: 'test-puzzle',
+    path: '/test-puzzle/:testId',
+    component: TestPuzzleComponent,
+    meta: testPuzzle
+  },
+  {
+    name: 'code-puzzle',
+    path: '/code-puzzle/:testId',
+    component: CodePuzzleComponent,
+    meta: codePuzzle,
+  }
 ];
 
 const STATES = ['NOT_CONFIRMED', 'ACTIVE', 'BLOCKED', 'DELETED'];
 
-export default (getPermissions, state) => {
+export default (getPermissions, getState) => {
   const router = createRouter({
     history: createWebHistory(),
     routes,
@@ -48,13 +65,14 @@ export default (getPermissions, state) => {
   router.beforeEach(async (to) => {
     const routeMeta = to.meta;
     const permissions = getPermissions();
+    const state = getState();
 
     for (const { name: permission, redirect } of routeMeta.permissions ?? []) {
       if (!permissions.includes(permission)) return { name: redirect };
     }
 
     const hasRequiredState =
-      routeMeta.state == null || routeMeta.state.name === STATES[state.value];
+      routeMeta.state == null || routeMeta.state.name === STATES[state];
 
     // if (!hasRequiredState) return { name: routeMeta.state.redirect };
   });
