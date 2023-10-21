@@ -20,18 +20,13 @@ export default {
   },
 
   async startPracTest(id) {
-    console.log(`Code for id: ${id}.`);
-    return {
-      succeed: true,
-      content: {
-        id: 1,
-        description: 'bla',
-      },
-    };
+    const url = `${TESTING_API_BASE_URL}/practical/${id}/start`;
+    return await makeApiRequest(url, 'GET', { sendCookies: true });
   },
 
-  async endPracTest({ id, code }) {
-    console.log(`Submitted code with id ${id}`, code);
-    return { succeed: false, content: 'failed to compile' };
+  async endPracTest({ testId, questionId, answer }) {
+    const url = `${TESTING_API_BASE_URL}/practical/${testId}/finish`;
+    const data = { questionId, answer };
+    return await makeApiRequest(url, 'POST', { data, sendCookies: true });
   },
 };

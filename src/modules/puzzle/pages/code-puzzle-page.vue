@@ -36,7 +36,7 @@ const error = ref(null);
 const submitCodePuzzle = async () => {
   const { succeed, content } = await api.testing.endPracTest({
     id: puzzle.value.id,
-    code: code.value,
+    answer: code.value,
   });
   if (succeed) await router.push({ name: 'profile' });
   else error.value = content;
