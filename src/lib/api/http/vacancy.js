@@ -31,9 +31,11 @@ export default {
     return await makeApiRequest(url, 'DELETE', { sendCookies: true });
   },
 
-  async updateVacancyById(id) {
-    return await makeApiRequest(VACANCY_API_BASE_URL, 'PUT', {
+  async updateVacancyById(id, data) {
+    const url = `${VACANCY_API_BASE_URL}/${id}`;
+    return await makeApiRequest(url, 'PUT', {
       sendCookies: true,
+      data,
     });
   },
 };
