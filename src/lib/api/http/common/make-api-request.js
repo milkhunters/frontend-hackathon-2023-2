@@ -1,5 +1,7 @@
 import { toCamelCase, toSnakeCase } from '@/lib/api/http/common/format';
 
+const REFRESH_TOKENS_URL = `${import.meta.env.VITE_API_URL}/auth/refresh_tokens`;
+
 const toApiRequest = (data) => {
 	const request = toSnakeCase(data);
 	return JSON.stringify(request);
@@ -32,11 +34,15 @@ const toApiResponse = async (data) => {
 	return { succeed, content };
 };
 
-export const makeApiRequest = async (url, method, { data = {}, sendCookies = false } = {}) => {
+export const makeApiRequest = async (url, method, { data = {}, sendCookies = false, retry = true } = {}) => {
 	const hasBody = !['GET', 'HEAD'].includes(method);
 	const body = hasBody ? toApiRequest(data) : undefined;
 	const headers = { 'Content-Type': 'application/json' };
 	const credentials = sendCookies ? 'include' : undefined;
 	const response = await fetch(url, { method, headers, body, credentials });
+	if (response.status === 403 && retry) {
+		await makeApiRequest(REFRESH_TOKENS_URL, 'POST', { sendCookies: true, retry: false });
+		return await makeApiRequest(url, method, { data, sendCookies, retry: false });
+	}
 	return await toApiResponse(response);
 };
