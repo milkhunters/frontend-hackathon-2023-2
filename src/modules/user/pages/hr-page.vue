@@ -1,11 +1,13 @@
 <script setup>
-import { inject, markRaw, onMounted, reactive, ref } from 'vue';
+import { inject, onMounted, reactive, ref, watch } from 'vue';
 import { API_INJECTION_KEY } from '@/keys';
+import Spinner from '@/components/spinner.vue';
 
 const api = inject(API_INJECTION_KEY);
 
 const pagination = reactive({ page: 1, count: 100 });
 const vacancies = ref(null);
+const dataIsLoading = ref(false);
 
 const showModalView = ref(false);
 const showModalAdd = ref(false);
@@ -17,8 +19,42 @@ const newVacancy = reactive({
   type: null,
   testTime: '',
 });
-
 const currentVacancy = ref({});
+const search = ref('');
+
+function debounce(func, wait) {
+  let timeout;
+
+  return function () {
+    const context = this;
+    const args = arguments;
+
+    const later = function () {
+      timeout = null;
+      func.apply(context, args);
+    };
+
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+const handleSearchDebounced = debounce(async (searchValue) => {
+  dataIsLoading.value = true;
+  const { succeed, content } = await api.vacancy.getAllVacancies(
+    pagination.page,
+    pagination.count,
+    searchValue
+  );
+  dataIsLoading.value = false;
+  if (succeed) vacancies.value = content;
+}, 300);
+
+
+watch(search, () => {
+  handleSearchDebounced(search.value);
+});
+
 
 const openVacancyItem = async (id) => {
   const { succeed, content } = await api.vacancy.getVacancyById(id);
@@ -78,7 +114,12 @@ onMounted(async () => {
   <main class="main">
     <div class="hr_wrapper">
       <div class="search_wrapper">
-        <input type="search" id="search" placeholder="Поиск..." />
+        <input
+          v-model="search"
+          type="search"
+          id="search"
+          placeholder="Поиск..."
+        />
         <button
           @click="showModalAdd = !showModalAdd"
           class="openModalBtn hr_add_button"
@@ -88,7 +129,10 @@ onMounted(async () => {
         </button>
       </div>
 
-      <div class="hr_vacancy_wrapper">
+      <div v-if="dataIsLoading" class="spinner">
+        <Spinner />
+      </div>
+      <div v-else class="hr_vacancy_wrapper">
         <div class="hr_vacancy" v-for="vacancy in vacancies" :key="vacancy.id">
           <div @click="openVacancyItem(vacancy.id)" class="hr_vacancy_item">
             <div class="hr_vacancy_item_content">
@@ -168,7 +212,7 @@ onMounted(async () => {
       </p>
       <p class="hr_view_modal_text">
         <span class="hr_view_modal_text_left">Описание: </span
-        >{{ currentVacancy.title }}
+        >{{ currentVacancy.content }}
       </p>
       <p class="hr_view_modal_text">
         <span class="hr_view_modal_text_left">Дата создания: </span>
@@ -189,12 +233,12 @@ onMounted(async () => {
         <button @click="showModalView = false" class="modal_btn_close">
           Закрыть
         </button>
-<!--        <button-->
-<!--          @click="tryDeleteVacancy(currentVacancy.id)"-->
-<!--          class="modal_btn_confirm modal_btn_red"-->
-<!--        >-->
-<!--          Удалить-->
-<!--        </button>-->
+        <!--        <button-->
+        <!--          @click="tryDeleteVacancy(currentVacancy.id)"-->
+        <!--          class="modal_btn_confirm modal_btn_red"-->
+        <!--        >-->
+        <!--          Удалить-->
+        <!--        </button>-->
         <button
           @click="tryUpdateVacancy(currentVacancy.id)"
           class="modal_btn_confirm modal_btn_red"
@@ -208,4 +252,7 @@ onMounted(async () => {
 
 <style scoped lang="css">
 @import '@/styles/layout.css';
+.spinner {
+  margin-top: 30px;
+}
 </style>

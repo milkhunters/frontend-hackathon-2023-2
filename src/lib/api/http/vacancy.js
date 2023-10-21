@@ -5,12 +5,13 @@ const VACANCY_GET_ALL_URL = `${VACANCY_API_BASE_URL}/list`;
 const VACANCY_NEW_URL = `${VACANCY_API_BASE_URL}/new`;
 
 export default {
-  async getAllVacancies(page, count) {
+  async getAllVacancies(page, count, query) {
     const url = new URL(VACANCY_GET_ALL_URL);
     url.searchParams.set('state', '0');
     url.searchParams.set('page', page.toString());
     url.searchParams.set('per_page', count.toString());
     url.searchParams.set('order_by', 'created_at');
+    if (query) url.searchParams.set('query', query);
     return await makeApiRequest(url, 'GET', { sendCookies: true });
   },
 
