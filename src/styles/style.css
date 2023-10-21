@@ -1,0 +1,457 @@
+.header {
+    height: 80px;
+    border-bottom: 3px solid var(--line-primary);
+    max-width: calc(100% - 260px);
+    margin-left: 260px;
+}
+.header_user {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+    padding-right: 40px;
+}
+.user_name {
+    font-size: 21px;
+    color: var(--title-color);
+    font-weight: 500;
+    margin-bottom: 5px;
+    line-height: normal;
+}
+.user_role {
+    font-size: 14px;
+    color: var(--text-color);
+    font-weight: 400;
+    line-height: normal;
+}
+.main {
+    max-width: calc(100% - 260px);
+    margin-left: 260px;
+    height: 100%;
+}
+
+/*
+
+    ОТСЮДА КОПИРОВАТЬ
+
+*/
+.exam_title {
+    font-size: 24px;
+    font-weight: 500;
+}
+.exam_quest_wrapper {
+    margin: 40px auto;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+.quest_name {
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 35px;
+}
+.quest_name_number {
+    padding-right: 14px;
+}
+.quest_content {
+    padding: 10px 0 0 28px;
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+}
+.quest_checkbox {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+.quest_checkbox+label {
+    display: inline-flex;
+    margin-top: 10px;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+.quest_checkbox+label::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 1px solid #adb5bd;
+    border-radius: 0.25em;
+    margin-right: 0.5em;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+}
+.quest_checkbox:checked+label::before {
+    border-color: #0b76ef;
+    background-color: #0b76ef;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+/* стили при наведении курсора на checkbox */
+.quest_checkbox:not(:disabled):not(:checked)+label:hover::before {
+    border-color: #b3d7ff;
+}
+/* стили для активного состояния чекбокса (при нажатии на него) */
+.quest_checkbox:not(:disabled):active+label::before {
+    background-color: #b3d7ff;
+    border-color: #b3d7ff;
+}
+/* стили для чекбокса, находящегося в фокусе */
+.quest_checkbox:focus+label::before {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+/* стили для чекбокса, находящегося в фокусе и не находящегося в состоянии checked */
+.quest_checkbox:focus:not(:checked)+label::before {
+    border-color: #80bdff;
+}
+/* стили для чекбокса, находящегося в состоянии disabled */
+.quest_checkbox:disabled+label::before {
+    background-color: #e9ecef;
+}
+
+.custom-radio {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+/* для элемента label связанного с .custom-radio */
+.custom-radio+label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
+    margin-top: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+/* создание в label псевдоэлемента  before со следующими стилями */
+.custom-radio+label::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 1px solid #adb5bd;
+    border-radius: 50%;
+    margin-right: 0.5em;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+}
+/* стили при наведении курсора на радио */
+.custom-radio:not(:disabled):not(:checked)+label:hover::before {
+    border-color: #b3d7ff;
+}
+/* стили для активной радиокнопки (при нажатии на неё) */
+.custom-radio:not(:disabled):active+label::before {
+    background-color: #b3d7ff;
+    border-color: #b3d7ff;
+}
+/* стили для радиокнопки, находящейся в фокусе */
+.custom-radio:focus+label::before {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+/* стили для радиокнопки, находящейся в фокусе и не находящейся в состоянии checked */
+.custom-radio:focus:not(:checked)+label::before {
+    border-color: #80bdff;
+}
+/* стили для радиокнопки, находящейся в состоянии checked */
+.custom-radio:checked+label::before {
+    border-color: #0b76ef;
+    background-color: #0b76ef;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+/* стили для радиокнопки, находящейся в состоянии disabled */
+.custom-radio:disabled+label::before {
+    background-color: #e9ecef;
+}
+
+.exam_send_btn {
+    padding: 10px 16px;
+    font-size: 15px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    margin-top: 80px;
+    align-self: flex-end;
+    background: #0b76ef;
+    transition: .2s ease;
+}
+.exam_send_btn:hover {
+    background: #0857b4;
+}
+
+/*
+    МОДАЛЬНОЕ ОКНО
+*/
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    opacity: 0; /* Начальная прозрачность для плавного появления */
+    transition: opacity 0.3s; /* Добавляем плавную анимацию появления */
+}
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 95%;
+    max-width: 450px;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+}
+.modal_title {
+    font-size: 18px;
+}
+.modal_buttons {
+    margin-top: 50px;
+    align-self: flex-end;
+}
+.modal_btn_confirm {
+    padding: 8px 16px;
+    font-size: 15px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    align-self: flex-end;
+    background: #0b76ef;
+    transition: .2s ease;
+}
+.modal_btn_confirm:hover {
+    background: #0857b4;
+}
+.modal_btn_close {
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    margin-right: 12px;
+    padding: 4px 6px;
+    background: none;
+}
+
+/*
+
+    ADMIN PANEL
+
+*/
+.admin_wrapper {
+    max-width: 80%;
+    width: 100%;
+    margin: 60px auto;
+}
+/* search */
+.search_wrapper {
+    display: flex;
+}
+#search {
+    width: 100%;
+    height: 40px;
+    background: #fff;
+    border: 1px solid #d2d2d2;
+    font-size: 14px;
+    color: #000;
+    padding: 0 0 0 20px;
+    border-radius: 8px;
+    -webkit-transition: 0.2s ease;
+    -moz-transition: 0.2s ease;
+    -ms-transition: 0.2s ease;
+    -o-transition: 0.2s ease;
+    transition: 0.2s ease;
+}
+.table_wrapper {
+    border: 1px solid #d2d2d2;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+.admin_table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.admin_table td {
+    padding: 15px;
+    border: 1px solid #d2d2d2;
+    white-space: nowrap;
+}
+.admin_table td:last-child {
+    padding: 0;
+}
+.admin_settings {
+    display: block;
+    vertical-align: middle;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 18px;
+}
+#role-select {
+    margin-top: 15px;
+}
+
+/*
+
+    HR PANEL
+
+*/
+.hr_wrapper {
+    max-width: 80%;
+    width: 100%;
+    margin: 60px auto;
+}
+.hr_add_button {
+    background: none;
+    border: 1px solid #d2d2d2;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    margin-left: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+/*
+    Модальное окно для HR
+*/
+.modal_content_top {
+    display: flex;
+    margin-bottom: 16px;
+    justify-content: space-between;
+}
+.hr_change_button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    transform: rotate(90deg);
+}
+#hr_add_modal {
+    z-index: 2;
+}
+#hr_add_modal label {
+    margin-top: 12px;
+    font-size: 15px;
+    color: #6d6d6d;
+}
+#hr_add_modal input {
+    font-size: 15px;
+    color: #6d6d6d;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #6d6d6d;
+    margin-top: 4px;
+}
+#hr_add_modal select {
+    font-size: 15px;
+    color: #6d6d6d;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #6d6d6d;
+    margin-top: 4px;
+}
+.hr_view_modal_text {
+    font-size: 15px;
+}
+.hr_view_modal_text span {
+    color: #6d6d6d;
+}
+.hr_view_modal_tests_title {
+    font-size: 17px;
+    color: #000000;
+    margin-top: 8px;
+}
+.hr_view_modal_test {
+    margin-top: 6px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    background: #f5f5f5;
+}
+.hr_view_modal_test_name {
+    font-size: 16px;
+    color: #000000;
+}
+.hr_view_modal_test_type {
+    font-size: 14px;
+    color: #6d6d6d;
+}
+.modal_btn_red {
+    background: red;
+}
+.modal_btn_red:hover {
+    background: #c40000;
+}
+/*
+    Вакансии HR
+*/
+.hr_vacancy_wrapper {
+    align-items: center;
+    margin-top: 30px;
+}
+.hr_vacancy {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    border-radius: 25px;
+    padding: 12px 24px;
+    background: #f5f5f5;
+}
+.hr_vacancy_item {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.hr_vacancy_item_name {
+    font-size: 18px;
+    color: #000000;
+}
+.hr_vacancy_item_type {
+    font-size: 14px;
+    color: #6d6d6d;
+}
+.hr_vacancy_item_date {
+    font-size: 16px;
+    color: #6d6d6d;
+}
+.hr_view_button {
+    background: #fff;
+    height: 40px;
+    border: 1px solid #ececec;
+    width: 40px;
+    text-align: center;
+    margin-left: 24px;
+    cursor: pointer;
+    padding-bottom: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+}
+
+@media screen and (max-width: 915px) {
+    .hr_wrapper, .exam_quest_wrapper, .admin_wrapper {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 60px 15px;
+    }
+}
