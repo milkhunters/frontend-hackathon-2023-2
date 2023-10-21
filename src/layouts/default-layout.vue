@@ -6,6 +6,7 @@ import { useMutation } from '@/composables/use-mutation';
 import 'bulma/css/bulma.min.css';
 import { useCurrentUserStore } from '@/stores/current-user';
 
+
 const dropdownOpened = ref(false);
 
 const closeUserDropdown = () => {
