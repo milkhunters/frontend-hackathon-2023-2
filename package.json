@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.1",
+    "@codemirror/theme-one-dark": "^6.1.2",
     "bulma": "^0.9.4",
     "codemirror": "^6.0.1",
     "pinia": "^2.1.7",
