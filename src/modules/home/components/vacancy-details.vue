@@ -50,11 +50,12 @@ watchEffect(async () => {
   <p class="hr_vacancy_item_name">Тесты</p>
   <p class="hr_vacancy_item_name">{{ completition }}</p>
   <div class="hr_vacancy_wrapper" v-if="tests.length">
-    <div class="hr_vacancy" v-for="test in leftTests" :key="test.id">
+    <div class="hr_vacancy" v-for="test in tests" :key="test.id">
       <div class="hr_vacancy_item">
         <div class="hr_vacancy_item_content">
           <p class="hr_vacancy_item_name">{{ test.title }}</p>
-          <p class="hr_vacancy_item_name">{{ test.percent }}</p>
+          <p class="hr_vacancy_item_name">{{ test.percent }}%</p>
+          <p class="hr_vacancy_item_name" v-if="test.passed">Пройден</p>
         </div>
       </div>
       <button

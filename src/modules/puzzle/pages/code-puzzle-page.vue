@@ -5,7 +5,7 @@ import { java } from '@codemirror/lang-java';
 import { javascript } from '@codemirror/lang-javascript';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
-import { computed, inject, ref, shallowRef, watch } from 'vue';
+import { computed, inject, reactive, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { API_INJECTION_KEY } from '@/keys';
 
@@ -32,8 +32,24 @@ const handleReady = (payload) => {
   view.value = payload.view;
 };
 
-const router = useRouter();
 const error = ref(null);
+
+const io = reactive({
+  out: null,
+  err: null,
+});
+
+const testCodePuzzle = async () => {
+  const { succeed, content } = await api.testing.execTest({ code: code.value, language: puzzle.value.language });
+  if (!succeed) {
+    error.value = 'Ошибка';
+    return;
+  }
+  io.out = content.stdout;
+  io.err = content.stderr;
+};
+
+const router = useRouter();
 
 const submitCodePuzzle = async () => {
   const { succeed } = await api.testing.endPracTest({
@@ -75,10 +91,13 @@ const lang = computed(() => {
     />
 
     <div v-if="error">{{ error }}</div>
+    <div v-if="io.out">Stdout: {{ io.out }}</div>
+    <div v-if="io.err">Stdout: {{ io.err }}</div>
 
-    Результаты будуд доступны через некоторое время
-
-    <button class="send_button" :disabled="error" @click="submitCodePuzzle">
+    <button class="send_button" @click="testCodePuzzle">
+      Тест
+    </button>
+    <button class="send_button" @click="submitCodePuzzle">
       Отпарвить
     </button>
   </default-layout>
