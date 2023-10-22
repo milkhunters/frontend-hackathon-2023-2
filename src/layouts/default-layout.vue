@@ -6,6 +6,8 @@ import { useMutation } from '@/composables/use-mutation';
 import 'bulma/css/bulma.min.css';
 import { useCurrentUserStore } from '@/stores/current-user';
 
+const props = defineProps(['userRole']);
+
 const dropdownOpened = ref(false);
 
 const closeUserDropdown = () => {
@@ -15,6 +17,8 @@ const closeUserDropdown = () => {
 const toggleDropdown = () => {
   dropdownOpened.value = !dropdownOpened.value;
 };
+
+const isAdmin = props.userRole === 'Admin';
 
 const currentUserStore = useCurrentUserStore();
 const router = useRouter();
@@ -69,7 +73,7 @@ const tryLogout = async () => {
       <div :class="styles.layout">
         <aside :class="styles.aside">
           <div :class="styles.items">
-            <router-link to="/" v-slot="{ isActive }">
+            <router-link v-if="!isAdmin" to="/" v-slot="{ isActive }">
               <div :class="[styles.item, { [styles.active]: isActive }]">
                 <i class="fi fi-rr-home"></i>
                 <div :class="styles.name">Главная</div>
@@ -84,10 +88,9 @@ const tryLogout = async () => {
           </div>
         </aside>
         <div :class="styles.slot">
-          <slot></slot>
+          <slot> </slot>
         </div>
-        <footer :class="styles.footer">
-        </footer>
+        <footer :class="styles.footer"></footer>
       </div>
     </div>
     <div :class="styles.mobile_aside">

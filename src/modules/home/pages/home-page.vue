@@ -9,14 +9,14 @@ const role = currentUserStore.user?.role?.title;
 </script>
 
 <template>
-	<default-layout>
-		<div :class="styles.wrapper">
-			<main>
-				<guest-home-page v-if="!role" />
-				<candidate-home-page v-else-if="role === 'User'" />
-			</main>
-		</div>
-	</default-layout>
+  <default-layout>
+    <div :class="styles.wrapper">
+      <main>
+        <guest-home-page v-if="!role" />
+        <candidate-home-page v-else-if="role === 'User'" />
+      </main>
+    </div>
+  </default-layout>
 </template>
 
 <style module="styles" lang="scss">
@@ -24,7 +24,7 @@ const role = currentUserStore.user?.role?.title;
 
 // Wrapper
 .wrapper {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 </style>

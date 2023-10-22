@@ -1,6 +1,5 @@
 <script setup>
-
-import {ref} from "vue";
+import { ref } from 'vue';
 
 const getUsers = () => {
   return [
@@ -48,7 +47,6 @@ const getUsers = () => {
 const users = getUsers();
 
 const showModal = ref(false);
-
 </script>
 
 <template>
@@ -60,10 +58,14 @@ const showModal = ref(false);
       <div class="table_wrapper">
         <table v-for="user in users" :key="user.id" class="admin_table">
           <tr>
-            <td>{{ user.firstName}} {{ user.lastName }}</td>
+            <td>{{ user.firstName }} {{ user.lastName }}</td>
             <td>{{ user.role.title }}</td>
             <td>
-              <button @click="showModal = !showModal" class="openModalBtn admin_settings" data-modal="myModal">
+              <button
+                @click="showModal = !showModal"
+                class="openModalBtn admin_settings"
+                data-modal="myModal"
+              >
                 &#9881;
               </button>
             </td>
@@ -82,7 +84,9 @@ const showModal = ref(false);
         <option value="cat">Администратор</option>
       </select>
       <div class="modal_buttons">
-        <button @click="showModal = false" class="modal_btn_close">Отмена</button>
+        <button @click="showModal = false" class="modal_btn_close">
+          Отмена
+        </button>
         <button class="modal_btn_confirm">Сохранить</button>
       </div>
     </div>
@@ -90,5 +94,5 @@ const showModal = ref(false);
 </template>
 
 <style scoped lang="css">
-@import "@/styles/layout.css";
+@import '@/styles/layout.css';
 </style>

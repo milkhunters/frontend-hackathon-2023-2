@@ -2,7 +2,7 @@
 import { inject, reactive, ref } from 'vue';
 import { useMutation } from '@/composables/use-mutation';
 import { API_INJECTION_KEY } from '@/keys';
-import {useCurrentUserStore} from "@/stores/current-user";
+import { useCurrentUserStore } from '@/stores/current-user';
 
 const api = inject(API_INJECTION_KEY);
 
@@ -100,8 +100,8 @@ const tryUpdateUser = async () => {
         </button>
       </div>
 
-        <label for="resume_profile">Ваше резюме</label>
-        <input type="file" id="resume_profile" name="resume_profile" />
+      <label for="resume_profile">Ваше резюме</label>
+      <input type="file" id="resume_profile" name="resume_profile" />
 
       <div class="modal_buttons">
         <button @click="tryUpdatePDF" class="modal_btn_confirm">

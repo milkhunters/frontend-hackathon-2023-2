@@ -43,10 +43,10 @@ const sendCode = async () => {
   const { succeed } = await confirmationStore.sendCode(code.value);
 
   if (succeed) {
-		await currentUserStore.signIn({
-			email: confirmationStore.email,
-			password: confirmationStore.password,
-		});
+    await currentUserStore.signIn({
+      email: confirmationStore.email,
+      password: confirmationStore.password,
+    });
     confirmationStore.clear();
     await router.push({ name: 'home' });
   } else {
