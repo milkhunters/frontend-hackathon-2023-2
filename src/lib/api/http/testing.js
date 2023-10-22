@@ -29,4 +29,12 @@ export default {
     const data = { questionId, answer };
     return await makeApiRequest(url, 'POST', { data, sendCookies: true });
   },
+
+  async getAllAttempts() {
+    const url = new URL(`${TESTING_API_BASE_URL}/attempts`);
+    url.searchParams.set('page', '1');
+    url.searchParams.set('count', '10000');
+    url.searchParams.set('order_by', 'created_at');
+    return await makeApiRequest(url, 'GET', { sendCookies: true });
+  },
 };

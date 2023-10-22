@@ -8,6 +8,7 @@ import { API_INJECTION_KEY } from '@/keys';
 const api = inject(API_INJECTION_KEY);
 const router = useRouter();
 
+const showAll = ref(false);
 const selectedId = ref(null);
 
 const selectVacancy = (id) => {
@@ -28,6 +29,7 @@ const goToTest = async (testId, type) => {
 </script>
 
 <template>
-  <vacancy-list @selected="selectVacancy" @started-test="goToFirstTest" />
+  <input type="checkbox" :checked="showAll">
+  <vacancy-list :show-all="showAll" @selected="selectVacancy" @started-test="goToFirstTest" />
   <vacancy-details v-if="selectedId" :id="selectedId" @selected="goToTest" />
 </template>

@@ -32,6 +32,15 @@ const tryUpdateUser = async () => {
     showSettings.value = false;
   }
 };
+
+const resumeInput = ref(null);
+
+const tryUpdatePdf = async () => {
+  if (!resumeInput.value) return;
+  const file = resumeInput.value.files[0];
+  if (!file) return;
+  await api.user.updateUserDocument({ file });
+};
 </script>
 
 <template>
@@ -59,7 +68,7 @@ const tryUpdateUser = async () => {
           <span class="hr_view_modal_text_left">О себе: </span>{{ user.bio }}
         </p>
         <p class="hr_view_modal_text">
-          <span class="hr_view_modal_text_left">Резюме: </span> PDF File
+          <span class="hr_view_modal_text_left">Резюме: </span>
         </p>
       </div>
     </div>
@@ -101,10 +110,10 @@ const tryUpdateUser = async () => {
       </div>
 
       <label for="resume_profile">Ваше резюме</label>
-      <input type="file" id="resume_profile" name="resume_profile" />
+      <input type="file" accept="pdf" id="resume_profile" name="resume_profile" ref="resumeInput" />
 
       <div class="modal_buttons">
-        <button @click="tryUpdatePDF" class="modal_btn_confirm">
+        <button @click="tryUpdatePdf" class="modal_btn_confirm">
           Изменить резюме
         </button>
         <button @click="showSettings = false" class="modal_btn_close">
