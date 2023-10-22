@@ -3,8 +3,8 @@ import Spinner from '@/components/spinner.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useMutation } from '@/composables/use-mutation';
-import 'bulma/css/bulma.min.css';
 import { useCurrentUserStore } from '@/stores/current-user';
+import 'bulma/css/bulma.min.css';
 
 const props = defineProps(['userRole']);
 
@@ -54,9 +54,6 @@ const tryLogout = async () => {
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                   <div class="dropdown-content">
-                    <a href="#" class="dropdown-item"> Профиль </a>
-                    <a href="#" class="dropdown-item"> Настройки </a>
-                    <hr class="dropdown-divider" />
                     <a @click.stop="tryLogout" class="dropdown-item">
                       <Spinner v-if="logoutMutation.isLoading.value" />
                       <template v-else>Выйти</template>
@@ -94,7 +91,7 @@ const tryLogout = async () => {
       </div>
     </div>
     <div :class="styles.mobile_aside">
-      <router-link to="/" v-slot="{ isActive }">
+      <router-link v-if="!isAdmin" to="/" v-slot="{ isActive }">
         <div
           :class="[styles.mobile_item, { [styles.mobile_active]: isActive }]"
         >
