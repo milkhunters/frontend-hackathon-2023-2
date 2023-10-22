@@ -27,14 +27,14 @@ watchEffect(async () => {
     vacancyId: props.id,
   });
   if (!testsResult.succeed) return;
-  for (const test of testsResult.content) {
+  testsResult.content.map(async (test) => {
     const { succeed, content: attempts } = await api.testing.getTestAttempts(
       test.id
     );
-    if (!succeed) continue;
+    if (!succeed) return;
     if (!attempts.length) {
       tests.value.push({ ...test, passed: false, percent: 0 });
-      continue;
+      return;
     }
     const maxAttempt = attempts.reduce(
       (max, curr) => (curr.percent > max.percent ? curr : max),
@@ -42,24 +42,25 @@ watchEffect(async () => {
     );
     const passed = maxAttempt.percent >= test.correctPercent;
     tests.value.push({ ...test, passed, percent: maxAttempt.percent });
-  }
+  });
 });
 </script>
 
 <template>
+  <p class="hr_vacancy_item_name">Тесты</p>
   <p class="hr_vacancy_item_name">{{ completition }}</p>
   <div class="hr_vacancy_wrapper" v-if="tests.length">
-    <div class="hr_vacancy" v-for="test in leftTests" :key="test.id">
+    <div class="hr_vacancy" v-for="test in tests" :key="test.id">
       <div class="hr_vacancy_item">
         <div class="hr_vacancy_item_content">
           <p class="hr_vacancy_item_name">{{ test.title }}</p>
-          <p class="hr_vacancy_item_name">{{ test.percent }}</p>
+          <p class="hr_vacancy_item_name">{{ test.percent }}%</p>
+          <p class="hr_vacancy_item_name" v-if="test.passed">Пройден</p>
         </div>
       </div>
       <button
         class="openModalBtn hr_view_button"
         data-modal="hr_view_modal"
-        v-if="!test.passed"
         @click="$emit('selected', test.id, test.type)"
       >
         Пройти

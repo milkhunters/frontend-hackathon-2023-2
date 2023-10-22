@@ -10,9 +10,11 @@ const route = useRoute();
 
 const puzzles = ref(null);
 const answers = ref(null);
+const error = ref(null);
 
 const selectAnswer = (questionId, answerId) => {
   answers.value[questionId].answerOptionId = answerId;
+  error.value = null;
 };
 
 const canEndTest = computed(() => {

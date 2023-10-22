@@ -1,15 +1,20 @@
 <script setup>
-import { computed, inject, onMounted, reactive, ref } from 'vue';
+import { computed, inject, reactive, ref, watchEffect } from 'vue';
 import { API_INJECTION_KEY } from '@/keys';
 
 defineEmits(['selected']);
 
 const api = inject(API_INJECTION_KEY);
 
-const pagination = reactive({ page: 1, count: 10 });
+const search = ref('');
+const pagination = reactive({ page: 1, count: 5 });
 const vacancies = ref(null);
 
-onMounted(async () => {
+const filteredVacancies = computed(() => {
+  return (vacancies.value ?? []).filter(({ title }) => title.includes(search.value.trim()));
+});
+
+watchEffect(async () => {
   const { succeed, content } = await api.vacancy.getAllVacancies(
     pagination.page,
     pagination.count
@@ -29,14 +34,26 @@ const prevPage = () => {
 </script>
 
 <template>
-  <div class="hr_wrapper" v-if="vacancies">
+  <div class="hr_wrapper">
     <div class="search_wrapper">
       <input type="search" id="search" placeholder="Поиск..." />
       <button class="openModalBtn hr_add_button" @click="nextPage">+</button>
-      <button class="openModalBtn hr_add_button" :disabled="!canGoBack" @click="prevPage">-</button>
+      <button
+        class="openModalBtn hr_add_button"
+        :disabled="!canGoBack"
+        @click="prevPage"
+      >
+        -
+      </button>
     </div>
-    <div class="hr_vacancy_wrapper">
-      <div class="hr_vacancy" v-for="vacancy in vacancies" :key="vacancy.id">
+    <div class="hr_vacancy_wrapper" v-if="filteredVacancies.length">
+      Вакансии
+      <div
+        class="hr_vacancy"
+        v-for="vacancy in filteredVacancies"
+        :key="vacancy.id"
+        @click="$emit('selected', vacancy.id)"
+      >
         <div class="hr_vacancy_item">
           <div class="hr_vacancy_item_content">
             <p class="hr_vacancy_item_name">{{ vacancy.title }}</p>
@@ -45,13 +62,6 @@ const prevPage = () => {
             {{ new Date(vacancy.updatedAt).toLocaleDateString() }}
           </p>
         </div>
-        <button
-          @click="$emit('selected', vacancy.id)"
-          class="openModalBtn hr_view_button"
-          data-modal="hr_view_modal"
-        >
-          Откликнуться
-        </button>
       </div>
     </div>
   </div>

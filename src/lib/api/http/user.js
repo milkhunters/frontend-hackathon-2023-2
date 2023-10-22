@@ -22,7 +22,9 @@ export default {
       sendCookies: true,
     });
   async getUserDocument() {
-    return await makeApiRequest(`${USER_API_BASE_URL}/document`, 'GET', { sendCookies: true });
+    return await makeApiRequest(`${USER_API_BASE_URL}/document`, 'GET', {
+      sendCookies: true,
+    });
   },
 
   async updateUserDocument({ file }) {
@@ -42,5 +44,23 @@ export default {
       body: form,
     });
     return { succeed: response.ok };
+  },
+
+  async getAllUsers() {
+    const url = `${USER_API_BASE_URL}/list`;
+    return await makeApiRequest(url, 'GET', { sendCookies: true });
+  },
+
+  async getUserById(id) {
+    const url = `${USER_API_BASE_URL}/${id}`;
+    return await makeApiRequest(url, 'GET', { sendCookies: true });
+  },
+
+  async updateUserRole({ id, roleId }) {
+    const { succeed, content: user } = await this.getUserById(id);
+    if (!succeed) return { succeed };
+    const url = `${USER_API_BASE_URL}/${id}`;
+    const data = { roleId };
+    return await makeApiRequest(url, 'PUT', { data, sendCookies: true });
   },
 };

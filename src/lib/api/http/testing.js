@@ -43,4 +43,11 @@ export default {
     url.searchParams.set('per_page', '10000');
     return await makeApiRequest(url, 'GET', { sendCookies: true });
   },
+
+  async execTest({ code, language }) {
+    const url = new URL(`${TESTING_API_BASE_URL}/practical/exec`);
+    url.searchParams.set('code', code); 
+    url.searchParams.set('language', language);
+    return await makeApiRequest(url, 'POST' , { sendCookies: true });
+  },
 };
