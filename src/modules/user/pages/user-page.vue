@@ -67,10 +67,10 @@ onMounted(async () => {
         </div>
         <p class="hr_view_modal_text">
           <span class="hr_view_modal_text_left">Фамилия: </span
-          >{{ user.firstName }}
+          >{{ currentUserStore.user.firstName }}
         </p>
         <p class="hr_view_modal_text">
-          <span class="hr_view_modal_text_left">Имя: </span>{{ user.lastName }}
+          <span class="hr_view_modal_text_left">Имя: </span>{{ currentUserStore.user.lastName }}
         </p>
         <p class="hr_view_modal_text">
           <span class="hr_view_modal_text_left">Резюме: 

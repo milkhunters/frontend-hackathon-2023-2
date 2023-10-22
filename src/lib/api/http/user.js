@@ -24,7 +24,7 @@ export default {
 
   async updateUserDocument({ file }) {
     const backUrl = new URL(`${USER_API_BASE_URL}/document`);
-    backUrl.searchParams.set('file_type', 'image/jpeg');
+    backUrl.searchParams.set('file_type', 'application/pdf');
     const updateResult = await makeApiRequest(backUrl, 'PUT', {
       sendCookies: true,
     });
