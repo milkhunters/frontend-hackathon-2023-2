@@ -9,6 +9,11 @@ const api = inject(API_INJECTION_KEY);
 const router = useRouter();
 
 const showAll = ref(false);
+
+const toggleShowAll = () => {
+  showAll.value = !showAll.value;
+};
+
 const selectedId = ref(null);
 
 const selectVacancy = (id) => {
@@ -29,7 +34,7 @@ const goToTest = async (testId, type) => {
 </script>
 
 <template>
-  <input type="checkbox" :checked="showAll">
+  Показать все вакансии <input type="checkbox" @change="toggleShowAll" :checked="showAll">
   <vacancy-list :show-all="showAll" @selected="selectVacancy" @started-test="goToFirstTest" />
   <vacancy-details v-if="selectedId" :id="selectedId" @selected="goToTest" />
 </template>

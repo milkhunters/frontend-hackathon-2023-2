@@ -5,7 +5,7 @@ import { API_INJECTION_KEY } from '@/keys';
 const props = defineProps({
   showAll: {
     type: Boolean,
-    default: true,
+    required: true,
   },
 });
 
@@ -14,12 +14,13 @@ defineEmits(['selected', 'started-test']);
 const api = inject(API_INJECTION_KEY);
 
 const pagination = reactive({ page: 1, count: 5 });
+
 const vacancies = ref(null);
 const enrolledVacancies = ref(null);
 
-const showedVacancies = computed(() =>
-  props.showAll ? vacancies.value : enrolledVacancies.value
-);
+const showedVacancies = computed(() => {
+  return props.showAll ? vacancies.value : enrolledVacancies.value;
+});
 
 const groupBy = (items, f) =>
   items.reduce((groups, item) => {
@@ -64,7 +65,7 @@ const prevPage = () => {
 </script>
 
 <template>
-  <div class="hr_wrapper" v-if="vacancies">
+  <div class="hr_wrapper" v-if="showedVacancies">
     <div class="search_wrapper">
       <input type="search" id="search" placeholder="Поиск..." />
       <button class="openModalBtn hr_add_button" @click="nextPage">+</button>
