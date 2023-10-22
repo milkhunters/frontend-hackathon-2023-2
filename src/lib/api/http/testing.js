@@ -26,7 +26,7 @@ export default {
 
   async endPracTest({ testId, questionId, answer }) {
     const url = `${TESTING_API_BASE_URL}/practical/${testId}/finish`;
-    const data = { questionId, answer };
+    const data = [{ questionId, answer }];
     return await makeApiRequest(url, 'POST', { data, sendCookies: true });
   },
 

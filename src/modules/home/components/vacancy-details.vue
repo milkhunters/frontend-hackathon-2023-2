@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, onMounted, ref } from 'vue';
+import { computed, inject, ref, watchEffect } from 'vue';
 import { API_INJECTION_KEY } from '@/keys';
 
 const props = defineProps({
@@ -21,7 +21,8 @@ const completition = computed(
   () => `${passedTests.value.length}/${tests.value.length}`
 );
 
-onMounted(async () => {
+watchEffect(async () => {
+  tests.value = [];
   const testsResult = await api.testing.getTestsForVacancy({
     vacancyId: props.id,
   });
