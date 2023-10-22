@@ -92,7 +92,7 @@ const lang = computed(() => {
 
     <div v-if="error">{{ error }}</div>
     <div v-if="io.out">Stdout: {{ io.out }}</div>
-    <div v-if="io.err">Stdout: {{ io.err }}</div>
+    <div v-if="io.err" style="color: red">Stderr: {{ io.err }}</div>
 
     <button class="send_button" @click="testCodePuzzle">
       Тест
