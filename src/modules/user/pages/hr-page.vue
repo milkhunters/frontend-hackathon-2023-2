@@ -7,8 +7,7 @@ const api = inject(API_INJECTION_KEY);
 
 const pagination = reactive({ page: 1, count: 100 });
 const vacancies = ref(null);
-const searchIsLoading = ref(false);
-const modalIsLoading = ref(false);
+const dataIsLoading = ref(false);
 
 const showModalView = ref(false);
 const showModalAdd = ref(false);
@@ -26,8 +25,9 @@ const search = ref('');
 function debounce(func, wait) {
   let timeout;
 
-  return function (...args) {
+  return function () {
     const context = this;
+    const args = arguments;
 
     const later = function () {
       timeout = null;
@@ -40,25 +40,25 @@ function debounce(func, wait) {
 }
 
 const handleSearchDebounced = debounce(async (searchValue) => {
-  searchIsLoading.value = true;
+  dataIsLoading.value = true;
   const { succeed, content } = await api.vacancy.getAllVacancies(
     pagination.page,
     pagination.count,
     searchValue
   );
-  searchIsLoading.value = false;
+  dataIsLoading.value = false;
   if (succeed) vacancies.value = content;
 }, 300);
+
 
 watch(search, () => {
   handleSearchDebounced(search.value);
 });
 
+
 const openVacancyItem = async (id) => {
-  modalIsLoading.value = true;
   const { succeed, content } = await api.vacancy.getVacancyById(id);
   if (succeed) currentVacancy.value = content;
-  modalIsLoading.value = false;
   showModalView.value = !showModalView.value;
 };
 
@@ -112,10 +112,7 @@ onMounted(async () => {
 
 <template>
   <main class="main">
-    <div class="spinner" v-if="modalIsLoading">
-      <spinner />
-    </div>
-    <div v-else class="hr_wrapper">
+    <div class="hr_wrapper">
       <div class="search_wrapper">
         <input
           v-model="search"
@@ -132,7 +129,7 @@ onMounted(async () => {
         </button>
       </div>
 
-      <div v-if="searchIsLoading" class="spinner">
+      <div v-if="dataIsLoading" class="spinner">
         <Spinner />
       </div>
       <div v-else class="hr_vacancy_wrapper">
@@ -180,8 +177,8 @@ onMounted(async () => {
       <label for="hr_type">Тип</label>
       <select v-model="newVacancy.type" name="hr_type" id="hr_type">
         <option value="">--Выберите тип--</option>
-        <option value="1">Стажировка</option>
-        <option value="0">Практика</option>
+        <option value="1">Стажер</option>
+        <option value="0">Практикант</option>
       </select>
 
       <label for="desc_hr">Время на прохождение теста</label>

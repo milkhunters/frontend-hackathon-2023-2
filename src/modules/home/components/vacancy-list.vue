@@ -1,22 +1,15 @@
 <script setup>
-import { computed, inject, reactive, ref, watchEffect } from 'vue';
+import { computed, inject, onMounted, reactive, ref } from 'vue';
 import { API_INJECTION_KEY } from '@/keys';
 
-const props = defineProps({
-  showAll: {
-    type: Boolean,
-    required: true,
-  },
-});
-
-defineEmits(['selected', 'started-test']);
+defineEmits(['selected']);
 
 const api = inject(API_INJECTION_KEY);
 
-const pagination = reactive({ page: 1, count: 5 });
+const pagination = reactive({ page: 1, count: 10 });
 const vacancies = ref(null);
 
-watchEffect(async () => {
+onMounted(async () => {
   const { succeed, content } = await api.vacancy.getAllVacancies(
     pagination.page,
     pagination.count
@@ -40,21 +33,10 @@ const prevPage = () => {
     <div class="search_wrapper">
       <input type="search" id="search" placeholder="Поиск..." />
       <button class="openModalBtn hr_add_button" @click="nextPage">+</button>
-      <button
-        class="openModalBtn hr_add_button"
-        :disabled="!canGoBack"
-        @click="prevPage"
-      >
-        -
-      </button>
+      <button class="openModalBtn hr_add_button" :disabled="!canGoBack" @click="prevPage">-</button>
     </div>
-    <div class="hr_vacancy_wrapper" v-if="vacancies">
-      <div
-        class="hr_vacancy"
-        v-for="vacancy in vacancies"
-        :key="vacancy.id"
-        @click="$emit('selected', vacancy.id)"
-      >
+    <div class="hr_vacancy_wrapper">
+      <div class="hr_vacancy" v-for="vacancy in vacancies" :key="vacancy.id">
         <div class="hr_vacancy_item">
           <div class="hr_vacancy_item_content">
             <p class="hr_vacancy_item_name">{{ vacancy.title }}</p>
@@ -64,11 +46,11 @@ const prevPage = () => {
           </p>
         </div>
         <button
-          @click.stop="$emit('started-test', vacancy.id)"
+          @click="$emit('selected', vacancy.id)"
           class="openModalBtn hr_view_button"
           data-modal="hr_view_modal"
         >
-          ->
+          Откликнуться
         </button>
       </div>
     </div>

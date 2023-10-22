@@ -16,6 +16,11 @@ export default {
     });
   },
 
+  async updateUserDocument(data) {
+    return await makeApiRequest(`${USER_API_BASE_URL}/document`, 'PUT', {
+      data,
+      sendCookies: true,
+    });
   async getUserDocument() {
     return await makeApiRequest(`${USER_API_BASE_URL}/document`, 'GET', { sendCookies: true });
   },
