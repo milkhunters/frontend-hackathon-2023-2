@@ -7,4 +7,8 @@ export default {
 	async getGuestPermissions() {
 		return await makeApiRequest(ROLE_GUEST_PERMISSIONS_URL, 'GET');
 	},
+
+	async getAllRoles() {
+		return await makeApiRequest(`${ROLE_API_BASE_URL}/list`, 'GET', { sendCookies: true });
+	},
 };
