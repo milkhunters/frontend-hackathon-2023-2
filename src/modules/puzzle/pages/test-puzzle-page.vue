@@ -33,8 +33,8 @@ watch(
     if (!succeed) return;
 
     puzzles.value = content;
-    answers.value = puzzles.value.map((_) => ({
-      questionId: route.params.id,
+    answers.value = content.map(({ id }) => ({
+      questionId: id,
       answerOptionId: null,
     }));
   },
@@ -66,7 +66,6 @@ const endTest = async () => {
 
       <button
         class="openModalBtn exam_send_btn"
-        :disabled="!canEndTest"
         @click="endTest"
       >
         Отправить результаты

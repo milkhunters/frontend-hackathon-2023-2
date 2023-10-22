@@ -3,7 +3,7 @@ import DefaultLayout from '@/layouts/default-layout.vue';
 import { Codemirror } from 'vue-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
-import { inject, ref, shallowRef, watch } from 'vue';
+import { computed, inject, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { API_INJECTION_KEY } from '@/keys';
 
@@ -17,7 +17,7 @@ watch(
     const { succeed, content } = await api.testing.startPracTest(
       route.params.testId
     );
-    if (succeed) puzzle.value = content;
+    if (succeed) puzzle.value = content[0];
   },
   { immediate: true }
 );
@@ -34,12 +34,13 @@ const router = useRouter();
 const error = ref(null);
 
 const submitCodePuzzle = async () => {
-  const { succeed, content } = await api.testing.endPracTest({
-    id: puzzle.value.id,
+  const { succeed } = await api.testing.endPracTest({
+    testId: route.params.testId,
+    questionId: puzzle.value.id,
     answer: code.value,
   });
   if (succeed) await router.push({ name: 'profile' });
-  else error.value = content;
+  else error.value = 'Ошибка';
 };
 
 const clearError = () => {
@@ -47,11 +48,19 @@ const clearError = () => {
 };
 
 watch(code, clearError);
+
+const lang = computed(() => {
+  if (puzzle.value.language === 62) return 'JAVA';
+  if (puzzle.value.language === 71) return 'PYTHON';
+  if (puzzle.value.language === 75) return 'C';
+  return '';
+});
 </script>
 
 <template>
   <default-layout v-if="puzzle">
-    <div>{{ puzzle.description }}</div>
+    <div>{{ puzzle.content }}</div>
+    <div>Язык: {{ lang }}</div>
 
     <codemirror
       v-model="code"
