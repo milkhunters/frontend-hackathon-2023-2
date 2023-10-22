@@ -1,7 +1,9 @@
 <script setup>
 import DefaultLayout from '@/layouts/default-layout.vue';
 import { Codemirror } from 'vue-codemirror';
+import { java } from '@codemirror/lang-java';
 import { javascript } from '@codemirror/lang-javascript';
+import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { computed, inject, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -23,8 +25,8 @@ watch(
 );
 
 const view = shallowRef();
-const code = ref(`console.log('Hello, world!')`);
-const extensions = [javascript(), oneDark];
+const code = ref('');
+const extensions = [java(), javascript(), python(), oneDark];
 
 const handleReady = (payload) => {
   view.value = payload.view;
@@ -74,8 +76,10 @@ const lang = computed(() => {
 
     <div v-if="error">{{ error }}</div>
 
+    Результаты будуд доступны через некоторое время
+
     <button class="send_button" :disabled="error" @click="submitCodePuzzle">
-      Send
+      Отпарвить
     </button>
   </default-layout>
 </template>

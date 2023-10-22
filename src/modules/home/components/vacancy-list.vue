@@ -2,19 +2,17 @@
 import { computed, inject, reactive, ref, watchEffect } from 'vue';
 import { API_INJECTION_KEY } from '@/keys';
 
-const props = defineProps({
-  showAll: {
-    type: Boolean,
-    required: true,
-  },
-});
-
-defineEmits(['selected', 'started-test']);
+defineEmits(['selected']);
 
 const api = inject(API_INJECTION_KEY);
 
+const search = ref('');
 const pagination = reactive({ page: 1, count: 5 });
 const vacancies = ref(null);
+
+const filteredVacancies = computed(() => {
+  return (vacancies.value ?? []).filter(({ title }) => title.includes(search.value.trim()));
+});
 
 watchEffect(async () => {
   const { succeed, content } = await api.vacancy.getAllVacancies(
@@ -36,7 +34,7 @@ const prevPage = () => {
 </script>
 
 <template>
-  <div class="hr_wrapper" v-if="vacancies">
+  <div class="hr_wrapper">
     <div class="search_wrapper">
       <input type="search" id="search" placeholder="Поиск..." />
       <button class="openModalBtn hr_add_button" @click="nextPage">+</button>
@@ -48,10 +46,11 @@ const prevPage = () => {
         -
       </button>
     </div>
-    <div class="hr_vacancy_wrapper" v-if="vacancies">
+    <div class="hr_vacancy_wrapper" v-if="filteredVacancies.length">
+      Вакансии
       <div
         class="hr_vacancy"
-        v-for="vacancy in vacancies"
+        v-for="vacancy in filteredVacancies"
         :key="vacancy.id"
         @click="$emit('selected', vacancy.id)"
       >
@@ -63,13 +62,6 @@ const prevPage = () => {
             {{ new Date(vacancy.updatedAt).toLocaleDateString() }}
           </p>
         </div>
-        <button
-          @click.stop="$emit('started-test', vacancy.id)"
-          class="openModalBtn hr_view_button"
-          data-modal="hr_view_modal"
-        >
-          ->
-        </button>
       </div>
     </div>
   </div>

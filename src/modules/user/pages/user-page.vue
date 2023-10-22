@@ -39,7 +39,8 @@ const tryUpdatePdf = async () => {
   if (!resumeInput.value) return;
   const file = resumeInput.value.files[0];
   if (!file) return;
-  await api.user.updateUserDocument({ file });
+  const { succeed } = await api.user.updateUserDocument({ file });
+  if (succeed) showSettings.value = false;
 };
 
 const resumeDownloadLink = ref(null);
@@ -72,9 +73,6 @@ onMounted(async () => {
           <span class="hr_view_modal_text_left">Имя: </span>{{ user.lastName }}
         </p>
         <p class="hr_view_modal_text">
-          <span class="hr_view_modal_text_left">О себе: </span>{{ user.bio }}
-        </p>
-        <p class="hr_view_modal_text">
           <span class="hr_view_modal_text_left">Резюме: 
             <a v-if="resumeDownloadLink" :href="resumeDownloadLink" download>Скачать</a>
           </span>
@@ -104,13 +102,6 @@ onMounted(async () => {
         v-model="newUser.lastName"
         type="text"
       />
-      <!--      <label for="name_profile">О себе</label>-->
-      <!--      <input-->
-      <!--        name="desc_profile"-->
-      <!--        id="desc_profile"-->
-      <!--        placeholder="О себе"-->
-      <!--        type="text"-->
-      <!--      />-->
 
       <div class="modal_buttons">
         <button @click="tryUpdateUser" class="modal_btn_confirm">
