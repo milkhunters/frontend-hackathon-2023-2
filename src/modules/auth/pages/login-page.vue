@@ -11,7 +11,7 @@ const router = useRouter();
 const lang = useLanguage();
 const currentUserStore = useCurrentUserStore();
 
-const email = ref('ivanov@milkhunters.ru');
+const email = ref('candidate@milkhunters.ru');
 const password = ref('qwerty123');
 const error = ref(null);
 
@@ -31,6 +31,11 @@ const clearError = () => (error.value = null);
 </script>
 
 <template>
+  <div :class="styles.helpers">
+    HR ---> hr@milkhunters.ru qwerty123
+    <br/>
+    Admin ---> admin@milkhunters.ru qwerty123
+  </div>
   <auth-layout title="Войдите в свой аккаунт">
     <form @submit.prevent="trySignIn">
       <p :class="styles.error_message" v-if="error">{{ error }}</p>
@@ -134,5 +139,15 @@ label {
   border-radius: 50px;
   font-size: 14px;
   margin: 10px;
+}
+
+.helpers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid $primary-color;
+  padding: 10px;
+  background: #252d3e;
+  color: white;
 }
 </style>
