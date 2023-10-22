@@ -60,7 +60,6 @@ watchEffect(async () => {
       <button
         class="openModalBtn hr_view_button"
         data-modal="hr_view_modal"
-        v-if="!test.passed"
         @click="$emit('selected', test.id, test.type)"
       >
         Пройти
