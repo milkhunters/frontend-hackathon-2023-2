@@ -18,8 +18,8 @@ const confirm = {
 
 const profile = { state: { name: 'ACTIVE', redirect: 'login' } };
 
-const testPuzzle = {};
-const codePuzzle = {};
+const testPuzzle = { state: { name: 'ACTIVE', redirect: 'login' } };
+const codePuzzle = testPuzzle;
 
 const routes = [
   { name: 'login', path: '/login', component: LoginPage, meta: login },

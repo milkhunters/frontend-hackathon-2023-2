@@ -59,9 +59,10 @@ const clearError = () => (error.value = null);
         <template v-else>Войти</template>
       </button>
 
-      <router-link :class="styles.to_register" to="register"
-        >У меня нет аккаунта</router-link
-      >
+      <router-link :class="styles.to_register" to="/register">
+        У меня нет аккаунта
+      </router-link>
+      <router-link :class="styles.to_register" to="/">На главную</router-link>
     </form>
   </auth-layout>
 </template>
