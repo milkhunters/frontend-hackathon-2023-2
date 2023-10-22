@@ -1,68 +1,80 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
+import { API_INJECTION_KEY } from '@/keys';
 
-const getUsers = () => {
-  return [
-    {
-      id: '1',
-      email: 'user1@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      role: {
-        id: '1',
-        title: 'User',
-        permissions: ['read'],
-      },
-      state: 0,
-      created_at: '2023-10-21T10:15:02.398Z',
-    },
-    {
-      id: '2',
-      email: 'user2@example.com',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      role: {
-        id: '1',
-        title: 'User',
-        permissions: ['read'],
-      },
-      state: 0,
-      created_at: '2023-10-21T10:15:02.398Z',
-    },
-    {
-      id: '3',
-      email: 'user3@example.com',
-      firstName: 'Alice',
-      lastName: 'Johnson',
-      role: {
-        id: '1',
-        title: 'User',
-        permissions: ['read'],
-      },
-      state: 0,
-      created_at: '2023-10-21T10:15:02.398Z',
-    },
-  ];
+const api = inject(API_INJECTION_KEY);
+
+const users = ref(null);
+
+onMounted(async () => {
+  const { succeed, content } = await api.user.getAllUsers();
+  if (succeed) users.value = content;
+});
+
+const search = ref('');
+
+const filteredUsers = computed(() => {
+  if (!users.value) return [];
+  return users.value.filter(
+    ({ firstName, lastName }) =>
+      firstName.includes(search.value) || lastName.includes(search.value)
+  );
+});
+
+const selectedUser = ref(null);
+const selectedRole = ref(null);
+
+const getRoleIdByName = async (name) => {
+  const { succeed, content } = await api.role.getAllRoles();
+  if (!succeed) return;
+  return content.filter(({ title }) => title === name)[0];
 };
-const users = getUsers();
+
+const saveRole = async () => {
+  if (!selectedUser.value || !selectedRole.value) return;
+  const role = await getRoleIdByName(selectedRole.value);
+  const { succeed } = await api.user.updateUserRole({
+    id: selectedUser.value,
+    roleId: role.id,
+  });
+  if (succeed)
+    users.value.find((user) => user.id === selectedUser.value).role.title =
+      selectedRole.value;
+  closeModal();
+};
 
 const showModal = ref(false);
+
+const openModal = (userId) => {
+  showModal.value = true;
+  selectedUser.value = userId;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  selectedUser.value = null;
+};
 </script>
 
 <template>
   <main class="main">
     <div class="admin_wrapper">
       <div class="search_wrapper">
-        <input type="search" id="search" placeholder="Поиск..." />
+        <input
+          type="search"
+          id="search"
+          v-model="search"
+          placeholder="Поиск..."
+        />
       </div>
       <div class="table_wrapper">
-        <table v-for="user in users" :key="user.id" class="admin_table">
+        <table v-for="user in filteredUsers" :key="user.id" class="admin_table">
           <tr>
             <td>{{ user.firstName }} {{ user.lastName }}</td>
             <td>{{ user.role.title }}</td>
             <td>
               <button
-                @click="showModal = !showModal"
+                @click="openModal(user.id)"
                 class="openModalBtn admin_settings"
                 data-modal="myModal"
               >
@@ -78,16 +90,14 @@ const showModal = ref(false);
   <div id="myModal" :class="showModal ? 'modal-open' : 'modal'">
     <div class="modal-content">
       <p class="modal_title">Выберите роль</p>
-      <select name="roles" id="role-select">
-        <option value="">--Выберите роль--</option>
-        <option value="dog">HR</option>
-        <option value="cat">Администратор</option>
+      <select name="roles" id="role-select" v-model="selectedRole">
+        <option :value="null">--Выберите роль--</option>
+        <option value="Hr">HR</option>
+        <option value="Admin">Администратор</option>
       </select>
       <div class="modal_buttons">
-        <button @click="showModal = false" class="modal_btn_close">
-          Отмена
-        </button>
-        <button class="modal_btn_confirm">Сохранить</button>
+        <button @click="closeModal" class="modal_btn_close">Отмена</button>
+        <button class="modal_btn_confirm" @click="saveRole">Сохранить</button>
       </div>
     </div>
   </div>
