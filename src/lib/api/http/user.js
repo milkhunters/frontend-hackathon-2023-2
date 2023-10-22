@@ -52,16 +52,10 @@ export default {
   },
 
   async updateUserRole({ id, roleId }) {
-    const user = await this.getUserById(id);
+    const { succeed, content: user } = await this.getUserById(id);
+    if (!succeed) return { succeed };
     const url = `${USER_API_BASE_URL}/${id}`;
-    const data = {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      bio: user.bio,
-      email: user.email,
-      roleId,
-      state: 0,
-    };
+    const data = { roleId };
     return await makeApiRequest(url, 'PUT', { data, sendCookies: true });
   },
 };
