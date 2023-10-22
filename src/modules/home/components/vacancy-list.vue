@@ -27,6 +27,7 @@ const groupBy = (items, f) =>
     const group = f(item);
     if (!groups[group]) groups[group] = [];
     groups[group].push(item);
+    return groups;
   }, {});
 
 const maxBy = (items, f) =>

@@ -26,17 +26,22 @@ onMounted(async () => {
     vacancyId: props.id,
   });
   if (!testsResult.succeed) return;
-  const testAttemptsRequests = testsResult.content.map((test) =>
-    api.testing.getTestAttempts(test.id)
-  );
-  const testAttempts = await Promise.all(testAttemptsRequests);
-  const succeed = testAttempts.every(({ succeed }) => succeed);
-  if (!succeed) return;
-  tests.value = testAttempts.map(({ content }) => {
-    console.log(content)
-    const passed = content.percent >= content.test.correctPercent;
-    return { ...content.test, passed };
-  });
+  for (const test of testsResult.content) {
+    const { succeed, content: attempts } = await api.testing.getTestAttempts(
+      test.id
+    );
+    if (!succeed) continue;
+    if (!attempts.length) {
+      tests.value.push({ ...test, passed: false, percent: 0 });
+      continue;
+    }
+    const maxAttempt = attempts.reduce(
+      (max, curr) => (curr.percent > max.percent ? curr : max),
+      attempts[0]
+    );
+    const passed = maxAttempt.percent >= test.correctPercent;
+    tests.value.push({ ...test, passed, percent: maxAttempt.percent });
+  }
 });
 </script>
 
@@ -47,11 +52,13 @@ onMounted(async () => {
       <div class="hr_vacancy_item">
         <div class="hr_vacancy_item_content">
           <p class="hr_vacancy_item_name">{{ test.title }}</p>
+          <p class="hr_vacancy_item_name">{{ test.percent }}</p>
         </div>
       </div>
       <button
         class="openModalBtn hr_view_button"
         data-modal="hr_view_modal"
+        v-if="!test.passed"
         @click="$emit('selected', test.id, test.type)"
       >
         Пройти
