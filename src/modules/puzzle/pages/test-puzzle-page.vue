@@ -10,14 +10,16 @@ const route = useRoute();
 
 const puzzles = ref(null);
 const answers = ref(null);
+const error = ref(null);
 
 const selectAnswer = (questionId, answerId) => {
   answers.value[questionId].answerOptionId = answerId;
+  error.value = null;
 };
 
 const canEndTest = computed(() => {
   return (
-    answers.value != null && answers.value.every(({ answerId }) => answerId)
+    !error.value && answers.value != null && answers.value.every(({ answerId }) => answerId)
   );
 });
 
@@ -44,6 +46,11 @@ watch(
 const router = useRouter();
 
 const endTest = async () => {
+  if (!canEndTest.value) {
+    error.value = 'Нельзя завершить тест';
+    return;
+  }
+
   const { succeed } = await api.testing.endTheoTest({
     id: route.params.testId,
     answers: answers.value,
@@ -64,8 +71,10 @@ const endTest = async () => {
         @selected="selectAnswer"
       />
 
+      <span v-if="error">{{ error }}</span>
       <button
         class="openModalBtn exam_send_btn"
+        v-else
         @click="endTest"
       >
         Отправить результаты
