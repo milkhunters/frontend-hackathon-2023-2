@@ -33,6 +33,7 @@ onMounted(async () => {
   const succeed = testAttempts.every(({ succeed }) => succeed);
   if (!succeed) return;
   tests.value = testAttempts.map(({ content }) => {
+    console.log(content)
     const passed = content.percent >= content.test.correctPercent;
     return { ...content.test, passed };
   });

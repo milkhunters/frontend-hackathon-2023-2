@@ -16,6 +16,10 @@ export default {
     });
   },
 
+  async getUserDocument() {
+    return await makeApiRequest(`${USER_API_BASE_URL}/document`, 'GET', { sendCookies: true });
+  },
+
   async updateUserDocument({ file }) {
     const backUrl = new URL(`${USER_API_BASE_URL}/document`);
     backUrl.searchParams.set('file_type', 'image/jpeg');
@@ -29,7 +33,7 @@ export default {
     });
     form.append('file', file);
     const response = await fetch(updateResult.content.url, {
-      method: 'PUT',
+      method: 'POST',
       body: form,
     });
     return { succeed: response.ok };

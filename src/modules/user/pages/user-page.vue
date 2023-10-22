@@ -1,10 +1,8 @@
 <script setup>
-import { inject, reactive, ref } from 'vue';
+import { inject, onMounted, reactive, ref } from 'vue';
 import { useMutation } from '@/composables/use-mutation';
 import { API_INJECTION_KEY } from '@/keys';
 import { useCurrentUserStore } from '@/stores/current-user';
-
-const api = inject(API_INJECTION_KEY);
 
 defineProps({
   user: {
@@ -12,6 +10,8 @@ defineProps({
     required: true,
   },
 });
+
+const api = inject(API_INJECTION_KEY);
 
 const showSettings = ref(false);
 const newUser = reactive({
@@ -41,6 +41,13 @@ const tryUpdatePdf = async () => {
   if (!file) return;
   await api.user.updateUserDocument({ file });
 };
+
+const resumeDownloadLink = ref(null);
+
+onMounted(async () => {
+  const { succeed, content } = await api.user.getUserDocument();
+  if (succeed) resumeDownloadLink.value = content.documentUrl;
+});
 </script>
 
 <template>
@@ -68,7 +75,9 @@ const tryUpdatePdf = async () => {
           <span class="hr_view_modal_text_left">О себе: </span>{{ user.bio }}
         </p>
         <p class="hr_view_modal_text">
-          <span class="hr_view_modal_text_left">Резюме: </span>
+          <span class="hr_view_modal_text_left">Резюме: 
+            <a v-if="resumeDownloadLink" :href="resumeDownloadLink" download>Скачать</a>
+          </span>
         </p>
       </div>
     </div>

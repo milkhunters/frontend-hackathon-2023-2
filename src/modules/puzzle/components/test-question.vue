@@ -27,11 +27,11 @@ defineEmits(['selected']);
         <input
           class="custom-radio"
           type="radio"
-          id="color-1"
-          name="color"
+          :id="'color-' + answer.id"
+          :name="'color-' + id"
           @change="$emit('selected', id, answer.id)"
         />
-        <label for="color-1">{{ answer.content }}</label>
+        <label :for="'color-' + answer.id">{{ answer.content }}</label>
       </div>
     </div>
   </div>
