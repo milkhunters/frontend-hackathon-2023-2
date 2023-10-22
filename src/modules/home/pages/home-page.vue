@@ -3,6 +3,7 @@ import DefaultLayout from '@/layouts/default-layout.vue';
 import GuestHomePage from '@/modules/home/pages/guest-home-page.vue';
 import CandidateHomePage from '@/modules/home/pages/candidate-home-page.vue';
 import { useCurrentUserStore } from '@/stores/current-user';
+import HrHome from '@/modules/home/pages/hr-home.vue';
 
 const currentUserStore = useCurrentUserStore();
 const role = currentUserStore.user?.role?.title;
@@ -14,6 +15,7 @@ const role = currentUserStore.user?.role?.title;
       <main>
         <guest-home-page v-if="!role" />
         <candidate-home-page v-else-if="role === 'User'" />
+        <hr-home v-else-if="role === 'Hr'"></hr-home>
       </main>
     </div>
   </default-layout>

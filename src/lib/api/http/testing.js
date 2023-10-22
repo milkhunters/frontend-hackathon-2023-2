@@ -50,4 +50,25 @@ export default {
     url.searchParams.set('language', language);
     return await makeApiRequest(url, 'POST' , { sendCookies: true });
   },
+
+  async getApprovedUsers() {
+    return await makeApiRequest(`${TESTING_API_BASE_URL}/approved/users`, 'GET', {sendCookies: true});
+  },
+
+  async createTest(vacancyId, data) {
+    const url = new URL(`${TESTING_API_BASE_URL}/new?vacancy_id=${vacancyId}`);
+    return await makeApiRequest(url, 'POST', { sendCookies: true, data });
+  },
+
+  async createTeoreticalQuestion(testingId, data) {
+    const url = new URL(`${TESTING_API_BASE_URL}/${testingId}/theoretical/new`);
+    return await makeApiRequest(url, 'POST', { sendCookies: true, data });
+  },
+
+  async createTheoreticalQuestionOptions(questionId, data) {
+    const url = new URL(
+        `${TESTING_API_BASE_URL}/theoretical/${questionId}/option/new`
+    );
+    return await makeApiRequest(url, 'POST', { sendCookies: true, data });
+  },
 };
